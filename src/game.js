@@ -1,5 +1,6 @@
+(function(){
 
-angular.module('myApp')
+  angular.module('myApp')
   .controller('ChessCtrl',
       ['$scope', '$log', '$timeout',
        'gameService', 'gameLogic', 'resizeGameAreaService',
@@ -72,9 +73,27 @@ angular.module('myApp')
     };
     $scope.getImageSrc = function (row, col) {
       var cell = $scope.board[row][col];
-      return cell === "X" ? "pieceX.png"
-          : cell === "O" ? "pieceO.png" : "";
+      return getPieceKind(cell);
     };
+
+    function getPieceKind(cell){
+      switch(cell) {
+        case 'WK': return 'img/Chess-whiteKing.png';
+        case 'WQ': return 'img/Chess-whiteQueen.png';
+        case 'WR': return 'img/Chess-whiteRook.png';
+        case 'WB': return 'img/Chess-whiteBishop.png';
+        case 'WN': return 'img/Chess-whiteKnight.png';
+        case 'WP': return 'img/Chess-whitePawn.png';
+        case 'BK': return 'img/Chess-blackKing.png';
+        case 'BQ': return 'img/Chess-blackQueen.png';
+        case 'BR': return 'img/Chess-blackRook.png';
+        case 'BB': return 'img/Chess-blackBishop.png';
+        case 'BN': return 'img/Chess-blackKnight.png';
+        case 'BP': return 'img/Chess-blackPawn.png';
+        default: return '';
+      }
+    }
+
     $scope.shouldSlowlyAppear = function (row, col) {
       return $scope.delta !== undefined &&
           $scope.delta.row === row && $scope.delta.col === col;
@@ -105,3 +124,6 @@ angular.module('myApp')
       updateUI: updateUI
     });
   }]);
+
+
+})();

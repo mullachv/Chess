@@ -4,11 +4,15 @@
   top: 20%;
   left: 20%;
 }
-.r {
-  border-right: 4pt solid black;
+.rb {
+  border-right: 2pt solid black;
+  border-bottom: 2pt solid black;
 }
-.b {
-  border-bottom: 4pt solid black;
+.l {
+  border-left: 2pt solid black;
+}
+.t {
+  border-top: 2pt solid black;
 }
 
 .slowlyAppear {
