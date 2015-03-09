@@ -11,7 +11,8 @@
 
     resizeGameAreaService.setWidthToHeight(1);
 
-    var selectedCells = [];       // record the clicked cells
+    var board = [],               // the board that we are playing without any rotate
+        selectedCells = [];       // record the clicked cells
 
     function sendComputerMove() {
       gameService.makeMove(aiService.createComputerMove($scope.board, $scope.turnIndex,
@@ -52,13 +53,14 @@
       }
 
       // is it other player's turn?
-      if (params.playersInfo && params.playersInfo[params.yourPlayerIndex].playerId !=='' &&
-         $scope.isYourTurn && params.yourPlayerIndex === 1) {
-        $scope.rotate = true;
-      } else {
-        $scope.rotate = false;
-      }     
+      // if (params.playersInfo && params.playersInfo[params.yourPlayerIndex].playerId !=='' &&
+      //    $scope.isYourTurn && params.yourPlayerIndex === 1) {
+      //   $scope.rotate = true;
+      // } else {
+      //   $scope.rotate = false;
+      // }     
 
+      board = angular.copy($scope.board);
       // rotate the array if the black player is playing
       if ($scope.rotate) {
         var board = angular.copy($scope.board);
@@ -68,10 +70,6 @@
       // clear up the selectedCells and waiting for next valid move
       selectedCells = [];    
     }
-
-    // Before getting any updateUI, we show an empty board to 
-    // a viewer (so you can't perform moves).
-    updateUI({stateAfterMove: {}, turnIndexAfterMove: 0, yourPlayerIndex: -2});
 
     $scope.cellClicked = function (row, col) {
       $log.info(["Clicked on cell:", row, col]);
@@ -100,14 +98,16 @@ console.log(selectedCells);
       if (selectedCells.length === 2) {
         try {
           var move = gameLogic.createMove($scope.board, selectedCells[0], selectedCells[1], 
-            $scope.turnIndex);
+            $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
+            $scope.canCastleQueen, $scope.enpassantPosition);
           $scope.isYourTurn = false; // to prevent making another move
           gameService.makeMove(move);
         } catch (e) {
           $log.info(["Exception throwned when create move in position:", row, col]);
           return;
+        } finally {
+          selectedCells = [];
         }
-
       }
     };
 
