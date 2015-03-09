@@ -11,6 +11,8 @@
 
     resizeGameAreaService.setWidthToHeight(1);
 
+    var selectedCells = [];       // record the clicked cells
+
     function sendComputerMove() {
       gameService.makeMove(aiService.createComputerMove($scope.board, $scope.turnIndex,
           // at most 1 second for the AI to choose a move (but might be much quicker)
@@ -33,10 +35,12 @@
       if ($scope.board === undefined) {
         $scope.board = gameLogic.getInitialBoard();
       }
+
       $scope.isYourTurn = params.turnIndexAfterMove >= 0 && // game is ongoing
         params.yourPlayerIndex === params.turnIndexAfterMove; // it's my turn
       $scope.turnIndex = params.turnIndexAfterMove;
 
+console.log($scope.isYourTurn);
       // Is it the computer's turn?
       if ($scope.isYourTurn &&
           params.playersInfo[params.yourPlayerIndex].playerId === '') {
@@ -45,6 +49,17 @@
         // then the animation is paused until the javascript finishes.
         $timeout(sendComputerMove, 500);
       }
+
+      // is it other player's turn?
+      if (params.yourPlayerIndex === 1) {
+        $scope.rotate = true;
+      } else {
+        $scope.rotate = false;
+      }     
+
+      // rotate the array if the black player is playing
+      var board = angular.copy($scope.board);
+      if($scope.rotate) $scope.board = getRotateBoard(board);
     }
 
     // Before getting any updateUI, we show an empty board to a viewer (so you can't perform moves).
@@ -67,6 +82,17 @@
         return;
       }
     };
+
+    function getRotateBoard(board) {
+      var boardAfterRotate = angular.copy(board);
+      for (var i = 0; i <= 7; i++) {
+        for (var j = 0; j <= 7; j++) {
+          boardAfterRotate[i][j] = board[7 - i][7 - j];
+        }
+      }
+      return boardAfterRotate;
+    };
+
     $scope.shouldShowImage = function (row, col) {
       var cell = $scope.board[row][col];
       return cell !== "";
@@ -93,6 +119,21 @@
         default: return '';
       }
     }
+
+    $scope.getBackgroundSrc = function(row, col) {
+      if (isLight(row, col)) return 'img/Chess-lightCell.png';
+      else return 'img/Chess-darkCell.png';
+    };
+
+    function isLight(row, col) {
+      var isEvenRow = false,
+          isEvenCol = false;
+
+      isEvenRow = (row % 2 === 0);
+      isEvenCol = (col % 2 === 0);
+
+      return (isEvenRow && isEvenCol || !isEvenRow && !isEvenCol);
+    };
 
     $scope.shouldSlowlyAppear = function (row, col) {
       return $scope.delta !== undefined &&

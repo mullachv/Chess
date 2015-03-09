@@ -7,12 +7,21 @@
 .rb {
   border-right: 2pt solid black;
   border-bottom: 2pt solid black;
+
 }
 .l {
   border-left: 2pt solid black;
+
 }
 .t {
   border-top: 2pt solid black;
+}
+
+.background_image {
+  max-width: 100%;
+  position: absolute;
+  z-index: 10;
+  left: 0;
 }
 
 .slowlyAppear {
