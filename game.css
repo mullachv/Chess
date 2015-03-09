@@ -24,6 +24,10 @@
   left: 0;
 }
 
+.selectedPiece {
+  box-shadow: 0px 0px 5px 5px #5F04B4;
+}
+
 .slowlyAppear {
   -webkit-animation: slowlyAppear 0.5s linear; /* Chrome, Safari, Opera */
   animation: slowlyAppear 0.5s linear;

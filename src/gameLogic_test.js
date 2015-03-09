@@ -19,21 +19,21 @@ describe("In Chess", function() {
       move: move})).toBe(false);
   }
 
-  it("placing WP in 4x4 from initial state is legal", function() {
-    expectMoveOk(0, {},
-      [{setTurn: {turnIndex : 1}},
+  fit("placing BP from 1x0 to 3x0 in initial state is legal", function() {
+    expectMoveOk(1, {},
+      [{setTurn: {turnIndex : 0}},
         {set: {key: 'board', value:
           [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
-          ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'], 
+          ['', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'], 
+          ['', '', '', '', '', '', '', ''],  
+          ['BP', '', '', '', '', '', '', ''], 
           ['', '', '', '', '', '', '', ''],  
           ['', '', '', '', '', '', '', ''], 
-          ['', '', '', '', 'WP', '', '', ''],  
-          ['', '', '', '', '', '', '', ''], 
-          ['WP', 'WP', 'WP', 'WP', '', 'WP', 'WP', 'WP'],  
+          ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],  
           ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR']]
         }},
-        {set: {key: 'deltaFrom', value: {row: 6, col: 4}}},
-        {set: {key: 'deltaTo', value: {row: 4, col: 4}}},
+        {set: {key: 'deltaFrom', value: {row: 1, col: 0}}},
+        {set: {key: 'deltaTo', value: {row: 3, col: 0}}},
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},

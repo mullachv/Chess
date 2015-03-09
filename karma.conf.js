@@ -6,9 +6,9 @@ module.exports = function(config){
     files : [
       'http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.js',
       'http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-mocks.js',
-      'gameLogic.js',
-      'gameLogic_test.js',
-      'gameLogictest_ByRay.js',
+      'src/gameLogic.js',
+      'src/gameLogic_test.js',
+      'src/gameLogictest_ByRay.js',
       // 'http://yoav-zibin.github.io/emulator/alphaBetaService.js',
       // 'aiService.js',
       // 'aiService_test.js'

@@ -30,6 +30,7 @@
     };
 
     function updateUI(params) {
+
       $scope.board = params.stateAfterMove.board;
       $scope.delta = params.stateAfterMove.delta;
       if ($scope.board === undefined) {
@@ -40,7 +41,7 @@
         params.yourPlayerIndex === params.turnIndexAfterMove; // it's my turn
       $scope.turnIndex = params.turnIndexAfterMove;
 
-console.log($scope.isYourTurn);
+
       // Is it the computer's turn?
       if ($scope.isYourTurn &&
           params.playersInfo[params.yourPlayerIndex].playerId === '') {
@@ -51,37 +52,71 @@ console.log($scope.isYourTurn);
       }
 
       // is it other player's turn?
-      if (params.yourPlayerIndex === 1) {
+      if (params.playersInfo && params.playersInfo[params.yourPlayerIndex].playerId !=='' &&
+         $scope.isYourTurn && params.yourPlayerIndex === 1) {
         $scope.rotate = true;
       } else {
         $scope.rotate = false;
       }     
 
       // rotate the array if the black player is playing
-      var board = angular.copy($scope.board);
-      if($scope.rotate) $scope.board = getRotateBoard(board);
+      if ($scope.rotate) {
+        var board = angular.copy($scope.board);
+        $scope.board = getRotateBoard(board);
+      }
+
+      // clear up the selectedCells and waiting for next valid move
+      selectedCells = [];    
     }
 
-    // Before getting any updateUI, we show an empty board to a viewer (so you can't perform moves).
+    // Before getting any updateUI, we show an empty board to 
+    // a viewer (so you can't perform moves).
     updateUI({stateAfterMove: {}, turnIndexAfterMove: 0, yourPlayerIndex: -2});
 
     $scope.cellClicked = function (row, col) {
       $log.info(["Clicked on cell:", row, col]);
-      if (window.location.search === '?throwException') { // to test encoding a stack trace with sourcemap
+
+      // to test encoding a stack trace with sourcemap
+      if (window.location.search === '?throwException') {
         throw new Error("Throwing the error because URL has '?throwException'");
       }
       if (!$scope.isYourTurn) {
         return;
       }
-      try {
-        var move = gameLogic.createMove($scope.board, row, col, $scope.turnIndex);
-        $scope.isYourTurn = false; // to prevent making another move
-        gameService.makeMove(move);
-      } catch (e) {
-        $log.info(["Cell is already full in position:", row, col]);
-        return;
+
+      if (selectedCells.length === 1) {
+        if (isValidToCell($scope.turnIndex, row, col)) {
+          selectedCells.push({row: row, col: col});
+        } else {
+          selectedCells[0] = {row: row, col: col};
+        }
+      } else {
+        selectedCells[0] = {row: row, col: col};
+      }
+console.log($scope.turnIndex);
+console.log(selectedCells);
+
+      // when from and to cell are clicked, we can make a move
+      if (selectedCells.length === 2) {
+        try {
+          var move = gameLogic.createMove($scope.board, selectedCells[0], selectedCells[1], 
+            $scope.turnIndex);
+          $scope.isYourTurn = false; // to prevent making another move
+          gameService.makeMove(move);
+        } catch (e) {
+          $log.info(["Exception throwned when create move in position:", row, col]);
+          return;
+        }
+
       }
     };
+
+    function isValidToCell(turnIndex, row, col) {
+      var opponent = (turnIndex === 0 ? 'B' : 'W');
+      return $scope.board[row][col] === '' || 
+              $scope.board[row][col].charAt(0) === opponent;
+    }
+
 
     function getRotateBoard(board) {
       var boardAfterRotate = angular.copy(board);
@@ -91,6 +126,11 @@ console.log($scope.isYourTurn);
         }
       }
       return boardAfterRotate;
+    };
+
+    $scope.isSelected = function(row, col) {
+      return selectedCells[0] && selectedCells[0].row === row && 
+              selectedCells[0].col === col;
     };
 
     $scope.shouldShowImage = function (row, col) {
