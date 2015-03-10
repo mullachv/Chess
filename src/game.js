@@ -52,19 +52,13 @@
         $timeout(sendComputerMove, 500);
       }
 
-      // is it other player's turn?
-      // if (params.playersInfo && params.playersInfo[params.yourPlayerIndex].playerId !=='' &&
-      //    $scope.isYourTurn && params.yourPlayerIndex === 1) {
-      //   $scope.rotate = true;
-      // } else {
-      //   $scope.rotate = false;
-      // }     
-
-      board = angular.copy($scope.board);
-      // rotate the array if the black player is playing
-      if ($scope.rotate) {
-        var board = angular.copy($scope.board);
-        $scope.board = getRotateBoard(board);
+      // If the play mode is not pass and play then "rotate" the board
+      // for the player. Therefore the board will always look from the
+      // point of view of the player in single player mode...
+      if (params.playMode === "playBlack") {
+        $scope.rotate = true;
+      } else {
+        $scope.rotate = false;
       }
 
       // clear up the selectedCells and waiting for next valid move
@@ -129,8 +123,10 @@ console.log(selectedCells);
     };
 
     $scope.isSelected = function(row, col) {
+      var turn = ($scope.turnIndex === 0 ? 'W' : 'B');
+
       return selectedCells[0] && selectedCells[0].row === row && 
-              selectedCells[0].col === col;
+              selectedCells[0].col === col && $scope.board[row][col].charAt(0) === turn;
     };
 
     $scope.shouldShowImage = function (row, col) {
@@ -138,6 +134,10 @@ console.log(selectedCells);
       return cell !== "";
     };
     $scope.getImageSrc = function (row, col) {
+      if ($scope.rotate) {
+        row = 7 - row;
+        col = 7 - col;
+      }
       var cell = $scope.board[row][col];
       return getPieceKind(cell);
     };
@@ -179,22 +179,6 @@ console.log(selectedCells);
       return $scope.delta !== undefined &&
           $scope.delta.row === row && $scope.delta.col === col;
     };
-
-    /**
-     * return the square object of the ui state.
-     * @returns square object of the ui state
-     */
-    $scope.getSquare = function(row, col) {
-      // If the board need to rotate 180 degrees, simply change the row and
-      // column for the UI... ($scope.uiState remains intact)
-      if ($scope.rotate) {
-        row = 7 - row;
-        col = 7 - col;
-      }
-      var index = $scope.convertDeltaToUIIndex(row, col);
-      return $scope.uiState[index];
-    };
-
 
 
     gameService.setGame({
