@@ -292,12 +292,14 @@ angular.module('myApp', []).factory('gameLogic', function() {
         }
         break;
       case 'P':
-        if(canPawnMove(board, deltaFrom, deltaTo, turnIndexBeforeMove)) {
+        if(canPawnMove(board, deltaFrom, deltaTo, turnIndexBeforeMove, enpassantPosition)) {
           boardAfterMove[deltaTo.row][deltaTo.col] = piece;
           // capture the opponent pawn with enpassant
-          if (enpassantPosition && deltaFrom.row === enpassantPosition.row && 
+          if (enpassantPosition.row && deltaFrom.row === enpassantPosition.row && 
             (Math.abs(deltaFrom.col - enpassantPosition.col) === 1)) {
             boardAfterMove[enpassantPosition.row][enpassantPosition.col] = '';
+            enpassantPosition.row = undefined;
+            enpassantPosition.col = undefined;
           }
           boardAfterMove[deltaFrom.row][deltaFrom.col] = '';
 
@@ -722,7 +724,7 @@ angular.module('myApp', []).factory('gameLogic', function() {
   /**
   * Returns true if the pawn can move from deltaFrom to deltaTo
   */
-  function canPawnMove(board, deltaFrom, deltaTo, turnIndex) {
+  function canPawnMove(board, deltaFrom, deltaTo, turnIndex, enpassantPosition) {
     var fromRow = deltaFrom.row,
         fromCol = deltaFrom.col,
         toRow = deltaTo.row,
@@ -740,10 +742,12 @@ angular.module('myApp', []).factory('gameLogic', function() {
         endPiece === '') {
       return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
     } else if (Math.abs(fromRow - toRow) === 1 && fromCol === toCol &&
-      board[toRow][toCol] === '') {
+      endPiece === '') {
       return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
     } else if (Math.abs(fromRow - toRow) === 1 && Math.abs(fromCol - toCol) === 1 &&
-      board[toRow][toCol].charAt(0) === opponent) {
+      (endPiece.charAt(0) === opponent || 
+        endPiece === '' && enpassantPosition && 
+        enpassantPosition.row && enpassantPosition.col)) {
       return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
     } else {
       return false;

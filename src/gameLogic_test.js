@@ -609,7 +609,7 @@ it("placing WR from 5x7 through WN to 5x0 is ilegal", function() {
   }); 
 
   it("BP moved leading to an enpassant position is legal", function() {
-    expectIllegalMove(1, {board: [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
+    expectMoveOk(1, {board: [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
           ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'], 
           ['', '', '', '', '', '', '', ''],  
           ['', '', '', '', 'WP', '', '', ''], 
@@ -620,7 +620,7 @@ it("placing WR from 5x7 through WN to 5x0 is ilegal", function() {
           canCastleKing: [true, true],
           canCastleQueen: [true, true]
           },
-      [{setTurn: {turnIndex : 1}},
+      [{setTurn: {turnIndex : 0}},
         {set: {key: 'board', value:
           [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
           ['BP', 'BP',  'BP',  '',  'BP', 'BP', 'BP', 'BP'], 
@@ -631,8 +631,8 @@ it("placing WR from 5x7 through WN to 5x0 is ilegal", function() {
           ['WP', 'WP', 'WP', 'WP', 'WB', 'WP', 'WP', 'WR'],  
           ['WR', 'WN', 'WB', 'WQ', 'WK', '',    '',   '']]
         }}, 
-        {set: {key: 'deltaFrom', value: {row: 7, col: 4}}},
-        {set: {key: 'deltaTo', value: {row: 7, col: 6}}},
+        {set: {key: 'deltaFrom', value: {row: 1, col: 3}}},
+        {set: {key: 'deltaTo', value: {row: 3, col: 3}}},
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
@@ -641,7 +641,7 @@ it("placing WR from 5x7 through WN to 5x0 is ilegal", function() {
   });
 
   it("WP performed enpassant provided the condition is legal", function() {
-    expectIllegalMove(0, {board: [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
+    expectMoveOk(0, {board: [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
           ['BP', 'BP', 'BP', '', 'BP', 'BP', 'BP', 'BP'], 
           ['', '', '', '', '', '', '', ''],  
           ['', '', '', 'BP', 'WP', '', '', ''], 
@@ -663,8 +663,8 @@ it("placing WR from 5x7 through WN to 5x0 is ilegal", function() {
           ['WP', 'WP', 'WP', 'WP', 'WB', 'WP', 'WP', 'WR'],  
           ['WR', 'WN', 'WB', 'WQ', 'WK', '', '', '']]
         }}, 
-        {set: {key: 'deltaFrom', value: {row: 7, col: 4}}},
-        {set: {key: 'deltaTo', value: {row: 7, col: 6}}},
+        {set: {key: 'deltaFrom', value: {row: 3, col: 4}}},
+        {set: {key: 'deltaTo', value: {row: 2, col: 3}}},
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},

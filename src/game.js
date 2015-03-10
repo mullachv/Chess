@@ -75,6 +75,10 @@
       if (!$scope.isYourTurn) {
         return;
       }
+      if($scope.rotate) {
+        row = 7 - row;
+        col = 7 - col;
+      }
 
       if (selectedCells.length === 1) {
         if (isValidToCell($scope.turnIndex, row, col)) {
