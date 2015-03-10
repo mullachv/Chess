@@ -89,7 +89,7 @@
       } else {
         selectedCells[0] = {row: row, col: col};
       }
-      
+
 console.log(selectedCells);
 
       // when from and to cell are clicked, we can make a move
@@ -127,6 +127,11 @@ console.log(selectedCells);
     };
 
     $scope.isSelected = function(row, col) {
+      if ($scope.rotate) {
+        row = 7 - row;
+        col = 7 - col;
+      }
+
       var turn = ($scope.turnIndex === 0 ? 'W' : 'B');
 
       return selectedCells[0] && selectedCells[0].row === row && 
@@ -179,11 +184,31 @@ console.log(selectedCells);
       return (isEvenRow && isEvenCol || !isEvenRow && !isEvenCol);
     };
 
-    $scope.shouldSlowlyAppear = function (row, col) {
-      return $scope.delta !== undefined &&
-          $scope.delta.row === row && $scope.delta.col === col;
-    };
+    $scope.canSelect = function(row, col) {
+      if ($scope.rotate) {
+        row = 7 - row,
+        col = 7 - col;
+      }
 
+      var turn = ($scope.turnIndex === 0 ? 'W' : 'B');
+      return $scope.board[row][col].charAt(0) === turn;
+    }
+
+    $scope.isBlackPiece = function(row, col) {
+      if ($scope.rotate) {
+        row = 7 - row;
+        col = 7 - col;
+      }
+      return $scope.board[row][col].charAt(0) === 'B';
+    }
+
+    $scope.isWhitePiece = function(row, col) {
+      if ($scope.rotate) {
+        row = 7 - row;
+        col = 7 - col;
+      }
+      return $scope.board[row][col].charAt(0) === 'W';
+    }
 
     gameService.setGame({
       gameDeveloperEmail: "xzzhuchen@gmail.com",

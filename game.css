@@ -33,9 +33,19 @@
   left: 10%;
 }
 
+.isBlackPiece.canSelect {
+  animation: black-blink 1s infinite;
+  -webkit-animation: black-blink 1s infinite;
+}
+
+.isWhitePiece.canSelect {
+  animation: white-blink 1s infinite;
+  -webkit-animation: white-blink 1s infinite;
+}
+
 .slowlyAppear {
-  -webkit-animation: slowlyAppear 0.5s linear; /* Chrome, Safari, Opera */
-  animation: slowlyAppear 0.5s linear;
+  -webkit-animation: slowlyAppear 0.3s linear; /* Chrome, Safari, Opera */
+  animation: slowlyAppear 0.3s linear;
 }
 /* Chrome, Safari, Opera */
 @-webkit-keyframes slowlyAppear {

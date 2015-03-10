@@ -26,6 +26,15 @@
   <script src="http://yoav-zibin.github.io/emulator/gameService.js"></script>
   <script src="http://yoav-zibin.github.io/emulator/messageService.js"></script>
   <script src="http://yoav-zibin.github.io/emulator/stateService.js"></script>
+
+  <!-- stylesheets -->
+  <link rel="stylesheet"
+        href="bower_components/html5-boilerplate/css/normalize.css">
+  <link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css">
+  <link rel="stylesheet"
+        href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet"
+        href="vendor/font-awesome-4.2.0/css/font-awesome.min.css"/>
   <link rel="stylesheet" type="text/css" href="http://yoav-zibin.github.io/emulator/main.css">
   <link rel="stylesheet" type="text/css" href="game.css">
 </head>
@@ -44,8 +53,11 @@
           <img ng-src="{{getBackgroundSrc(row, col)}}" classs="background_image" width="100%" height="100%">
           <div class="img-wrap">
             <!--The image of the piece get wrapped upon background img-->
-            <img ng-class="{piece: true, slowlyAppear: shouldSlowlyAppear(row, col),
-                            selectedPiece: isSelected(row, col)}"
+            <img ng-class="{piece: true, 
+                            selectedPiece: isSelected(row, col),
+                            canSelect: canSelect(row, col),
+                            isBlackPiece: isBlackPiece(row, col),
+                            isWhitePiece: isWhitePiece(row, col)}"
               ng-show="shouldShowImage(row, col)"
               ng-src="{{getImageSrc(row, col)}}"
               id="{{'e2e_test_img_' + row + 'x' + col}}">
