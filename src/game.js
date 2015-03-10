@@ -89,7 +89,7 @@
       } else {
         selectedCells[0] = {row: row, col: col};
       }
-console.log($scope.turnIndex);
+      
 console.log(selectedCells);
 
       // when from and to cell are clicked, we can make a move

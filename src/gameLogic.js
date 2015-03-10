@@ -198,6 +198,10 @@ angular.module('myApp', []).factory('gameLogic', function() {
  */
   function createMove(board, deltaFrom, deltaTo, turnIndexBeforeMove, 
                       isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition) {
+    console.log("CreateMove arguments: " + angular.toJson([
+board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition
+]));
+    
     if (board === undefined) {
       // Initially (at the beginning of the match), the board in state is undefined.
       board = getInitialBoard();
