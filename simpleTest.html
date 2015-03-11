@@ -27,6 +27,9 @@
           ['WP', 'WP', 'WP', 'WP', 'WB', 'WP', 'WP', 'WR'],  
           ['WR', 'WN', 'WB', 'WQ', 'WK', '', '', '']],
         enpassantPosition: {row: 3, col: 3},
+        isUnderCheck:[false, false],
+        canCastleKing: [true, true],
+        canCastleQueen: [true, true],
         },
       move: move};
     var res = gameLogic.isMoveOk(params);

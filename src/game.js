@@ -33,7 +33,14 @@
     function updateUI(params) {
 
       $scope.board = params.stateAfterMove.board;
-      $scope.delta = params.stateAfterMove.delta;
+      $scope.deltaFrom = params.stateAfterMove.deltaFrom;
+      $scope.deltaTo = params.stateAfterMove.deltaTo;
+      $scope.isUnderCheck = params.stateAfterMove.isUnderCheck;
+      $scope.canCastleKing = params.stateAfterMove.canCastleKing;
+      $scope.canCastleQueen = params.stateAfterMove.canCastleQueen;
+      $scope.enpassantPosition = params.stateAfterMove.enpassantPosition;
+
+
       if ($scope.board === undefined) {
         $scope.board = gameLogic.getInitialBoard();
       }
@@ -95,7 +102,9 @@ console.log(selectedCells);
       // when from and to cell are clicked, we can make a move
       if (selectedCells.length === 2) {
         try {
-          var move = gameLogic.createMove($scope.board, selectedCells[0], selectedCells[1], 
+          $scope.deltaFrom = selectedCells[0];
+          $scope.deltaTo = selectedCells[1];
+          var move = gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
             $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
             $scope.canCastleQueen, $scope.enpassantPosition);
           $scope.isYourTurn = false; // to prevent making another move
