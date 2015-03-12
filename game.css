@@ -33,7 +33,7 @@
   left: 10%;
 }
 
-/*img.isBlackPiece.canSelect {
+img.isBlackPiece.canSelect {
   animation: black-blink 2s infinite;
   -webkit-animation: black-blink 2s infinite;
 }
@@ -41,9 +41,9 @@
 img.isWhitePiece.canSelect {
   animation: white-blink 2s infinite;
   -webkit-animation: white-blink 2s infinite;
-}*/
+}
 
-img.canSelect {
+/*img.canSelect {
   -webkit-animation-name: orangellowPulse;
   -webkit-animation-duration: 3s;
   -webkit-animation-iteration-count: infinite;
@@ -51,17 +51,9 @@ img.canSelect {
   -webkit-transition: all 0.5s ease; 
   -moz-transition: all 0.5s ease; 
   -o-transition: all 0.5s ease;
-}
+}*/
 
-.canSelect:hover { 
-    opacity: 1; 
-    /*Reflection*/ 
-    -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(.7, transparent), to(rgba(0,0,0,0.4))); 
-    /*Glow*/ 
-    -webkit-box-shadow: 0px 0px 20px rgba(255,255,255,0.8); 
-    -moz-box-shadow: 0px 0px 20px rgba(255,255,255,0.8); 
-    box-shadow: 0px 0px 20px rgba(255,255,255,0.8); 
-}
+
 
 .slowlyAppear {
   -webkit-animation: slowlyAppear 0.3s linear; /* Chrome, Safari, Opera */
@@ -79,9 +71,34 @@ img.canSelect {
   to {opacity: 1;}
 }
 
+/****************************************
+Blink key frames
+****************************************/
+@keyframes white-blink {
+  50% {
+    filter: brightness(0.8);
+    -webkit-filter: brightness(0.8);
+    -webkit-box-shadow:0 0 18px #ffb515;
+  }
+}
+@-webkit-keyframes white-blink {
+  50% {
+    filter: brightness(0.8);
+    -webkit-filter: brightness(0.8);
+    -webkit-box-shadow:0 0 18px #ffb515;
+  }
+}
 
-@-webkit-keyframes orangellowPulse {
-  from{-webkit-box-shadow:0 0 9px #FFFF00;}
-  50%{filter: brightness(1.6); -webkit-filter: brightness(1.6); -webkit-box-shadow:0 0 18px #ffb515;}
-  to{-webkit-box-shadow:0 0 9px #FFFF00;}
+@keyframes black-blink {
+  50% {
+    filter: brightness(1.6);
+    -webkit-filter: brightness(1.6);
+    -webkit-box-shadow:0 0 18px #ffb515;
+  }
+}
+@-webkit-keyframes black-blink {
+  50% {
+    filter: brightness(1.6);
+    -webkit-filter: brightness(1.6);
+    -webkit-box-shadow:0 0 18px #ffb515;
 }

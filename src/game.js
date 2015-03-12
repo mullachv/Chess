@@ -15,9 +15,24 @@
         selectedCells = [];       // record the clicked cells
 
     function sendComputerMove() {
-      gameService.makeMove(aiService.createComputerMove($scope.board, $scope.turnIndex,
-          // at most 1 second for the AI to choose a move (but might be much quicker)
-          {millisecondsLimit: 1000}));
+      var possibleMoves = gameLogic.getPossibleMoves($scope.board, $scope.turnIndex, 
+            $scope.isUnderCheck, $scope.canCastleKing,
+            $scope.canCastleQueen, $scope.enpassantPosition);
+      if (possibleMoves.length) {
+        console.log("yay there are possibleMoves");
+        for (var i = 0; i < possibleMoves.length; i++) {
+          if (possibleMoves[i] && possibleMoves[i][1].length) {
+            $scope.deltaFrom = possibleMoves[i][0];
+            $scope.deltaTo = possibleMoves[i][1][0];
+            break;
+          }
+        }
+        gameService.makeMove(gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
+            $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
+            $scope.canCastleQueen, $scope.enpassantPosition));
+      } else {
+        $log.info("no there are no possible moves!");
+      }   
     }
 
     /**
@@ -123,7 +138,6 @@ console.log(selectedCells);
       return $scope.board[row][col] === '' || 
               $scope.board[row][col].charAt(0) === opponent;
     }
-
 
     function getRotateBoard(board) {
       var boardAfterRotate = angular.copy(board);

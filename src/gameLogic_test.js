@@ -893,4 +893,27 @@ it("placing WP from 1x4 to 0x4 is legal and results WP promoted to WQ", function
         ]);
   });
 
+  it("testing getPawnPossibleMoves for a given state", function() {
+    var expectedMoves = [{row: 1, col: 6}],
+        board = [['', '', '', '', '', '', '', 'BK'], 
+            ['', '', '', '', 'WR', '', '', ''], 
+            ['', '', '', '', '', '', 'WP', ''],  
+            ['', '', '', '', '', 'WK', '', ''], 
+            ['', '', '', '', '', '', '', ''],  
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', ''],  
+            ['', '', '', '', '', '', '', '']],
+        turnIndex = 0,
+        startPos = {row: 2, col: 6},
+        enpassantPosition = {row: undefined, col: undefined};
+
+    var possibleMoves = _gameLogic.getPawnPossibleMoves(
+      board, turnIndex, startPos, enpassantPosition);
+  
+    expect(possibleMoves).toEqual(expectedMoves);    
+  });
+
+
+
+
 }); 

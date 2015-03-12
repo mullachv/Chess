@@ -837,8 +837,8 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
 
       var expectedMove = createMove(board, deltaFrom, deltaTo, turnIndexBeforeMove, 
                           isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition);
-            console.log("jane!!!!");
-            console.log(expectedMove);
+// console.log("jane!!!!");
+// console.log(expectedMove);
       if (!angular.equals(move, expectedMove)) {
         return false;
       }
@@ -858,30 +858,35 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
     // the list of possible moves of deltaFrom and deltaTo
     var possibleMoves = [],
         turn = (turnIndex === 0 ? 'W' : 'B');
-    for (var i = 0; i < 7; i++) {
-      for (var j = 0; j < 7; j++) {
+    for (var i = 0; i <= 7; i++) {
+      for (var j = 0; j <= 7; j++) {
         var piece = board[i][j];
         if (piece !== '' && piece.charAt(0) === turn) {
           var startPos = {row: i, col: j};
           switch(piece.charAt(1)) {
             case 'K': 
-              possibleMoves.concat(
-                getKingPossibleMoves(board, turnIndex, startPos, isUnderCheck, canCastleKing, canCastleQueen)); 
+              possibleMoves.push([startPos, 
+                getKingPossibleMoves(board, turnIndex, startPos, isUnderCheck, canCastleKing, canCastleQueen)]); 
               break;
             case 'Q': 
-              possibleMoves.concat(getQueenPossibleMoves(board, turnIndex, startPos));
+              possibleMoves.push([startPos,
+                getQueenPossibleMoves(board, turnIndex, startPos)]);
               break;
             case 'R':
-              possibleMoves.concat(getRookPossibleMoves(board, turnIndex, startPos));
+              possibleMoves.push([startPos,
+                getRookPossibleMoves(board, turnIndex, startPos)]);
               break;
             case 'B':
-              possibleMoves.concat(getBishopPossibleMoves(board, turnIndex, startPos));
+              possibleMoves.push([startPos,
+                getBishopPossibleMoves(board, turnIndex, startPos)]);
               break;
             case 'N':
-              possibleMoves.concat(getKnightPossibleMoves(board, turnIndex, startPos));
+              possibleMoves.push([startPos,
+                getKnightPossibleMoves(board, turnIndex, startPos)]);
               break;
             case 'P':
-              possibleMoves.concat(getPawnPossibleMoves(board, turnIndex, startPost, enpassantPosition));
+              possibleMoves.push([startPos,
+                getPawnPossibleMoves(board, turnIndex, startPos, enpassantPosition)]);
               break;
           }
         }
@@ -893,6 +898,12 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
   return {
       getInitialBoard: getInitialBoard,
       getPossibleMoves: getPossibleMoves,
+      getKingPossibleMoves: getKingPossibleMoves,
+      getQueenPossibleMoves: getQueenPossibleMoves,
+      getRookPossibleMoves: getRookPossibleMoves,
+      getBishopPossibleMoves: getBishopPossibleMoves,
+      getKnightPossibleMoves: getKnightPossibleMoves,
+      getPawnPossibleMoves: getPawnPossibleMoves,
       createMove: createMove,
       isMoveOk: isMoveOk
   };

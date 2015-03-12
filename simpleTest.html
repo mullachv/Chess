@@ -34,6 +34,18 @@
       move: move};
     var res = gameLogic.isMoveOk(params);
     console.log("params=", params, "result=", res);
+
+    var possibleMoves = gameLogic.getPossibleMoves(
+      [['', '', '', '', '', '', '', 'BK'], 
+      ['', '', '', '', 'WR', '', '', ''], 
+      ['', '', '', '', '', '', 'WP', ''],  
+      ['', '', '', '', '', 'WK', '', ''], 
+      ['', '', '', '', '', '', '', ''],  
+      ['', '', '', '', '', '', '', ''], 
+      ['', '', '', '', '', '', '', ''],  
+      ['', '', '', '', '', '', '', '']],0, [false, false], 
+      [true, true], [true, true], {row: undefined, col: undefined});
+    console.log(possibleMoves);
   });
   </script>
 </head>
