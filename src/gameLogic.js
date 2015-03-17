@@ -1,3 +1,4 @@
+(function() {
 'use strict';
 
 /*global angular */
@@ -99,7 +100,7 @@ angular.module('myApp', []).factory('gameLogic', function() {
  */
   function isTie(board, turnIndex, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition) {   
     if (!isUnderCheck[turnIndex]) {
-      var curPlayer = (turnIndex === 0 ? 'W' : 'B');
+      var curPlayer = turnIndex === 0 ? 'W' : 'B';
 
       for (var i = 0; i < 8; i++) {
         for (var j = 0; j < 8; j++) {
@@ -109,28 +110,34 @@ angular.module('myApp', []).factory('gameLogic', function() {
             switch (curPiece.charAt(1)) {
               case 'K': 
                 if (canKingMoveAnywhere(board, turnIndex, curPos, 
-                    isUnderCheck, canCastleKing, canCastleQueen)) 
+                    isUnderCheck, canCastleKing, canCastleQueen)) {
                   return false; 
+                }            
                 break;
               case 'Q': 
-                if (canQueenMoveAnywhere(board, turnIndex, curPos))
+                if (canQueenMoveAnywhere(board, turnIndex, curPos)) {
                   return false; 
+                }              
                 break;
               case 'R': 
-                if (canRookMoveAnywhere(board, turnIndex, curPos))
+                if (canRookMoveAnywhere(board, turnIndex, curPos)) {
                   return false; 
+                }     
                 break;
               case 'B': 
-                if (canBishopMoveAnywhere(board, turnIndex, curPos))
+                if (canBishopMoveAnywhere(board, turnIndex, curPos)) {
                   return false;
+                }  
                 break;
               case 'N': 
-                if (canKnightMoveAnywhere(board, turnIndex, curPos))
+                if (canKnightMoveAnywhere(board, turnIndex, curPos)) {
                   return false;
+                }    
                 break;
               case 'P': 
-                if (canPawnMoveAnywhere(board, turnIndex, curPos, enpassantPosition))
+                if (canPawnMoveAnywhere(board, turnIndex, curPos, enpassantPosition)) {
                   return false;
+                }   
                 break;
             }
           }
@@ -148,7 +155,7 @@ angular.module('myApp', []).factory('gameLogic', function() {
  */
  function getWinner(board, turnIndex, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition) {
     if (isUnderCheck[turnIndex]) {
-      var curPlayer = (turnIndex === 0 ? 'W' : 'B');
+      var curPlayer = turnIndex === 0 ? 'W' : 'B';
       var kingsPosition = findKingsPosition(board, turnIndex);
 
       // if there is no available moves for king
@@ -161,24 +168,29 @@ angular.module('myApp', []).factory('gameLogic', function() {
               var curPos = {row: i, col: j};
               switch (curPiece.charAt(1)) {
                 case 'Q': 
-                  if (canQueenMoveAnywhere(board, turnIndex, curPos, canCastleKing, canCastleQueen))
+                  if (canQueenMoveAnywhere(board, turnIndex, curPos, canCastleKing, canCastleQueen)) {
                     return ''; 
+                  }              
                   break;
                 case 'R': 
-                  if (canRookMoveAnywhere(board, turnIndex, curPos))
+                  if (canRookMoveAnywhere(board, turnIndex, curPos)) {
                     return ''; 
+                  }   
                   break;
                 case 'B':
-                  if (canBishopMoveAnywhere(board, turnIndex, curPos))
+                  if (canBishopMoveAnywhere(board, turnIndex, curPos)) {
                     return '';
+                  }     
                   break;
                 case 'N': 
-                  if (canKnightMoveAnywhere(board, turnIndex, curPos))
+                  if (canKnightMoveAnywhere(board, turnIndex, curPos)) {
                     return '';
+                  }       
                   break;
                 case 'P': 
-                  if (canPawnMoveAnywhere(board, turnIndex, curPos, enpassantPosition))
+                  if (canPawnMoveAnywhere(board, turnIndex, curPos, enpassantPosition)) {
                     return '';
+                  }         
                   break;
               }
             }
@@ -917,3 +929,5 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
   };
 
 });
+
+}());

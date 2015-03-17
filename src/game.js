@@ -1,25 +1,20 @@
 (function(){
-
   angular.module('myApp')
   .controller('ChessCtrl',
       ['$scope', '$log', '$timeout',
        'gameService', 'gameLogic', 'resizeGameAreaService',
       function ($scope, $log, $timeout,
         gameService, gameLogic,  resizeGameAreaService) {
-
-    'use strict';
-
+'use strict';
     resizeGameAreaService.setWidthToHeight(1);
 
-    var board = [],               // the board that we are playing without any rotate
-        selectedCells = [];       // record the clicked cells
+    var selectedCells = [];       // record the clicked cells
 
     function sendComputerMove() {
       var possibleMoves = gameLogic.getPossibleMoves($scope.board, $scope.turnIndex, 
             $scope.isUnderCheck, $scope.canCastleKing,
             $scope.canCastleQueen, $scope.enpassantPosition);
       if (possibleMoves.length) {
-        console.log("yay there are possibleMoves");
         for (var i = 0; i < possibleMoves.length; i++) {
           if (possibleMoves[i] && possibleMoves[i][1].length) {
             $scope.deltaFrom = possibleMoves[i][0];
@@ -112,8 +107,6 @@
         selectedCells[0] = {row: row, col: col};
       }
 
-console.log(selectedCells);
-
       // when from and to cell are clicked, we can make a move
       if (selectedCells.length === 2) {
         try {
@@ -141,20 +134,10 @@ console.log(selectedCells);
     };
 
     function isValidToCell(turnIndex, row, col) {
-      var opponent = (turnIndex === 0 ? 'B' : 'W');
+      var opponent = turnIndex === 0 ? 'B' : 'W';
       return $scope.board[row][col] === '' || 
               $scope.board[row][col].charAt(0) === opponent;
     }
-
-    function getRotateBoard(board) {
-      var boardAfterRotate = angular.copy(board);
-      for (var i = 0; i <= 7; i++) {
-        for (var j = 0; j <= 7; j++) {
-          boardAfterRotate[i][j] = board[7 - i][7 - j];
-        }
-      }
-      return boardAfterRotate;
-    };
 
     $scope.isSelected = function(row, col) {
       if ($scope.rotate) {
@@ -162,7 +145,7 @@ console.log(selectedCells);
         col = 7 - col;
       }
 
-      var turn = ($scope.turnIndex === 0 ? 'W' : 'B');
+      var turn = $scope.turnIndex === 0 ? 'W' : 'B';
 
       return selectedCells[0] && selectedCells[0].row === row && 
               selectedCells[0].col === col && $scope.board[row][col].charAt(0) === turn;
@@ -200,29 +183,29 @@ console.log(selectedCells);
     }
 
     $scope.getBackgroundSrc = function(row, col) {
-      if (isLight(row, col)) return 'img/Chess-lightCell.png';
-      else return 'img/Chess-darkCell.png';
+      if (isLight(row, col)) { return 'img/Chess-lightCell.png'; }
+      else { return 'img/Chess-darkCell.png'; }
     };
 
     function isLight(row, col) {
       var isEvenRow = false,
           isEvenCol = false;
 
-      isEvenRow = (row % 2 === 0);
-      isEvenCol = (col % 2 === 0);
+      isEvenRow = row % 2 === 0;
+      isEvenCol = col % 2 === 0;
 
-      return (isEvenRow && isEvenCol || !isEvenRow && !isEvenCol);
-    };
+      return isEvenRow && isEvenCol || !isEvenRow && !isEvenCol;
+    }
 
     $scope.canSelect = function(row, col) {
       if ($scope.rotate) {
-        row = 7 - row,
+        row = 7 - row;
         col = 7 - col;
       }
 
-      var turn = ($scope.turnIndex === 0 ? 'W' : 'B');
+      var turn = $scope.turnIndex === 0 ? 'W' : 'B';
       return $scope.board[row][col].charAt(0) === turn;
-    }
+    };
 
     $scope.isBlackPiece = function(row, col) {
       if ($scope.rotate) {
@@ -230,7 +213,7 @@ console.log(selectedCells);
         col = 7 - col;
       }
       return $scope.board[row][col].charAt(0) === 'B';
-    }
+    };
 
     $scope.isWhitePiece = function(row, col) {
       if ($scope.rotate) {
@@ -238,7 +221,7 @@ console.log(selectedCells);
         col = 7 - col;
       }
       return $scope.board[row][col].charAt(0) === 'W';
-    }
+    };
 
     gameService.setGame({
       gameDeveloperEmail: "xzzhuchen@gmail.com",

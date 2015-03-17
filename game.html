@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build:[manifest] dist/game.appcache -->
+<!-- build:[manifest] game.appcache -->
 <html lang="en" ng-app="myApp" ng-strict-di>
 <!-- /build -->
 <head>
@@ -10,9 +10,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
   <!-- build:js http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js -->
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js"></script>
-  <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
-  <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.js"></script>
   <!-- /build -->
 
   <!-- build:js dist/everything.min.js -->
@@ -21,11 +19,18 @@
   <!-- <script src="src/aiService.js"></script> -->
   <!-- /build -->
 
-  <!-- <script src="http://yoav-zibin.github.io/emulator/alphaBetaService.js"></script> -->
+  <!-- build:js http://yoav-zibin.github.io/emulator/dist/gameServices.min.js -->
+  <script src="http://yoav-zibin.github.io/emulator/alphaBetaService.js"></script>
   <script src="http://yoav-zibin.github.io/emulator/resizeGameAreaService.js"></script>
   <script src="http://yoav-zibin.github.io/emulator/gameService.js"></script>
   <script src="http://yoav-zibin.github.io/emulator/messageService.js"></script>
   <script src="http://yoav-zibin.github.io/emulator/stateService.js"></script>
+  <!-- /build -->
+
+  <script src="languages/en.js"></script>
+  <!-- build:js http://yoav-zibin.github.io/emulator/angular-translate/angular-translate.2.6.1.min.js -->
+  <script src="http://yoav-zibin.github.io/emulator/angular-translate/angular-translate.2.6.1.js"></script>
+  <!-- /build -->
 
   <!-- stylesheets -->
   <link rel="stylesheet"
@@ -38,6 +43,7 @@
   <link rel="stylesheet" type="text/css" href="http://yoav-zibin.github.io/emulator/main.css">
   <link rel="stylesheet" type="text/css" href="game.css">
 </head>
+
 <body ng-cloak ng-controller="ChessCtrl">
 
 <div id="gameArea">
