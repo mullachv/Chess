@@ -202,15 +202,15 @@ angular.module('myApp', []).factory('gameLogic', function() {
 board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition
 ]));
     
-    if (board === undefined) {
+    if (!board) {
       // Initially (at the beginning of the match), the board in state is undefined.
       board = getInitialBoard();
     }
     // initialize all variables
-    if (isUnderCheck === undefined) isUnderCheck = [false, false];
-    if (canCastleKing === undefined) canCastleKing = [true, true];
-    if (canCastleQueen === undefined) canCastleQueen = [true, true];
-    if (enpassantPosition === undefined) enpassantPosition = {row: undefined, col: undefined};
+    if (!isUnderCheck) isUnderCheck = [false, false];
+    if (!canCastleKing) canCastleKing = [true, true];
+    if (!canCastleQueen) canCastleQueen = [true, true];
+    if (!enpassantPosition) enpassantPosition = {row: null, col: null};
 
     var destination = board[deltaTo.row][deltaTo.col];
 
@@ -229,7 +229,12 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
       throw new Error("Can only make a move if the game is not over!");
     }
     
-    var boardAfterMove = angular.copy(board);
+    var boardAfterMove = angular.copy(board),
+        isUnderCheckAfterMove = angular.copy(isUnderCheck),
+        canCastleKingAfterMove = angular.copy(canCastleKing),
+        canCastleQueenAfterMove = angular.copy(canCastleQueen),
+        enpassantPositionAfterMove = angular.copy(enpassantPosition);
+
     var piece = board[deltaFrom.row][deltaFrom.col];
     var turn = turnIndexBeforeMove === 0 ? 'W' : 'B';
 
@@ -245,16 +250,16 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
           boardAfterMove[deltaFrom.row][deltaFrom.col] = '';
           boardAfterMove[deltaTo.row][deltaTo.col - 1] = turn + 'R';
           boardAfterMove[deltaTo.row][7] = '';
-          canCastleKing[turnIndexBeforeMove] = false;
-          canCastleQueen[turnIndexBeforeMove] = false;
+          canCastleKingAfterMove[turnIndexBeforeMove] = false;
+          canCastleQueenAfterMove[turnIndexBeforeMove] = false;
         }
         else if (isCastlingQueen(board, deltaFrom, deltaTo, turnIndexBeforeMove, canCastleQueen)) {
           boardAfterMove[deltaTo.row][deltaTo.col] = piece;
           boardAfterMove[deltaFrom.row][deltaFrom.col] = '';
           boardAfterMove[deltaTo.row][deltaTo.col + 1] = turn + 'R';
           boardAfterMove[deltaTo.row][0] = '';
-          canCastleKing[turnIndexBeforeMove] = false;
-          canCastleQueen[turnIndexBeforeMove] = false;
+          canCastleKingAfterMove[turnIndexBeforeMove] = false;
+          canCastleQueenAfterMove[turnIndexBeforeMove] = false;
         }
         else if(canKingMove(board, deltaFrom, deltaTo, turnIndexBeforeMove)) {
           boardAfterMove[deltaTo.row][deltaTo.col] = piece;
@@ -300,10 +305,11 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
           boardAfterMove[deltaTo.row][deltaTo.col] = piece;
           // capture the opponent pawn with enpassant
           if (enpassantPosition.row && deltaFrom.row === enpassantPosition.row && 
+            deltaFrom.col !== deltaTo.col &&
             (Math.abs(deltaFrom.col - enpassantPosition.col) === 1)) {
             boardAfterMove[enpassantPosition.row][enpassantPosition.col] = '';
-            enpassantPosition.row = undefined;
-            enpassantPosition.col = undefined;
+            enpassantPositionAfterMove.row = null;
+            enpassantPositionAfterMove.col = null;
           }
           boardAfterMove[deltaFrom.row][deltaFrom.col] = '';
 
@@ -311,15 +317,15 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
           if (turn === "W" && deltaTo.row === 4) {
             if (boardAfterMove[deltaTo.row][deltaTo.col - 1] === "BP" || 
               boardAfterMove[deltaTo.row][deltaTo.col + 1] === "BP") {
-              enpassantPosition.row = deltaTo.row;
-              enpassantPosition.col = deltaTo.col;
+              enpassantPositionAfterMove.row = deltaTo.row;
+              enpassantPositionAfterMove.col = deltaTo.col;
             }          
           }
           if (turn === "B" && deltaTo.row === 3) {
             if (boardAfterMove[deltaTo.row][deltaTo.col - 1] === "WP" || 
               boardAfterMove[deltaTo.row][deltaTo.col + 1] === "WP") {
-              enpassantPosition.row = deltaTo.row;
-              enpassantPosition.col = deltaTo.col;
+              enpassantPositionAfterMove.row = deltaTo.row;
+              enpassantPositionAfterMove.col = deltaTo.col;
             }
           }
 
@@ -336,14 +342,14 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
     }
     var turnIndexAfterMove = 1 - turnIndexBeforeMove;
     if (isUnderCheckByPositions(boardAfterMove, turnIndexAfterMove)) {
-      isUnderCheck[turnIndexAfterMove] = true;
+      isUnderCheckAfterMove[turnIndexAfterMove] = true;
     }
-    var winner = getWinner(boardAfterMove, turnIndexAfterMove, isUnderCheck, 
-                  canCastleKing, canCastleQueen, enpassantPosition);
+    var winner = getWinner(boardAfterMove, turnIndexAfterMove, isUnderCheckAfterMove, 
+                  canCastleKingAfterMove, canCastleQueenAfterMove, enpassantPositionAfterMove);
     // console.log("winner: " + winner);
     var firstOperation;
-    if (winner !== '' || isTie(boardAfterMove, turnIndexAfterMove, isUnderCheck, 
-        canCastleKing, canCastleQueen, enpassantPosition)) {
+    if (winner !== '' || isTie(boardAfterMove, turnIndexAfterMove, isUnderCheckAfterMove, 
+        canCastleKingAfterMove, canCastleQueenAfterMove, enpassantPositionAfterMove)) {
       // Game over.
       firstOperation = {endMatch: {endMatchScores:
         (winner === 'W' ? [1, 0] : (winner === 'B' ? [0, 1] : [0, 0]))}};
@@ -356,10 +362,10 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
             {set: {key: 'board', value: boardAfterMove}},
             {set: {key: 'deltaFrom', value: {row: deltaFrom.row, col: deltaFrom.col}}},
             {set: {key: 'deltaTo', value: {row: deltaTo.row, col: deltaTo.col}}},
-            {set: {key: 'isUnderCheck', value: isUnderCheck}},
-            {set: {key: 'canCastleKing', value: canCastleKing}},
-            {set: {key: 'canCastleQueen', value: canCastleQueen}},
-            {set: {key: 'enpassantPosition', value: enpassantPosition}},
+            {set: {key: 'isUnderCheck', value: isUnderCheckAfterMove}},
+            {set: {key: 'canCastleKing', value: canCastleKingAfterMove}},
+            {set: {key: 'canCastleQueen', value: canCastleQueenAfterMove}},
+            {set: {key: 'enpassantPosition', value: enpassantPositionAfterMove}},
             ];
   }
 
@@ -835,6 +841,8 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
       var enpassantPosition = stateBeforeMove.enpassantPosition;
       var board = stateBeforeMove.board;
 
+console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, turnIndexBeforeMove, 
+                          isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition]));
       var expectedMove = createMove(board, deltaFrom, deltaTo, turnIndexBeforeMove, 
                           isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition);
 // console.log("jane!!!!");

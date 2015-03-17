@@ -119,6 +119,13 @@ console.log(selectedCells);
         try {
           $scope.deltaFrom = selectedCells[0];
           $scope.deltaTo = selectedCells[1];
+
+// console.log("game.js CreateMove arguments: " + angular.toJson([
+// $scope.board, $scope.deltaFrom, $scope.deltaTo, 
+//             $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
+//             $scope.canCastleQueen, $scope.enpassantPosition
+// ]));
+
           var move = gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
             $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
             $scope.canCastleQueen, $scope.enpassantPosition);
