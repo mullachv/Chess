@@ -269,7 +269,7 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
         }
         break;
       case 'Q':
-        if(canQueenMove(board, deltaFrom, deltaTo)) {
+        if(canQueenMove(board, deltaFrom, deltaTo, turnIndexBeforeMove)) {
             boardAfterMove[deltaTo.row][deltaTo.col] = piece;
             boardAfterMove[deltaFrom.row][deltaFrom.col] = '';
         } else {
