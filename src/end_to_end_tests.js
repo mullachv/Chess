@@ -1,8 +1,16 @@
 /* https://github.com/angular/protractor/blob/master/docs/toc.md */
 
-describe('TicTacToe', function() {
+describe('Chess', function() {
 
   'use strict';
+
+  var _gameLogic, board;
+
+  beforeEach(module("myApp"));
+
+  beforeEach(inject(function (gameLogic) {
+    _gameLogic = gameLogic;
+  }));
 
   beforeEach(function() {
     browser.get('http://localhost:9000/game.min.html');
@@ -50,10 +58,10 @@ describe('TicTacToe', function() {
   }
 
   it('should have a title', function () {
-    expect(browser.getTitle()).toEqual('TicTacToe');
+    expect(browser.getTitle()).toEqual('Chess');
   });
 
-  it('should have an empty TicTacToe board', function () {
+  it('should have an empty Chess board', function () {
     expectBoard(
         [['', '', ''],
          ['', '', ''],

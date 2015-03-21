@@ -93,12 +93,12 @@ Blink key frames
   50% {
     filter: brightness(1.6);
     -webkit-filter: brightness(1.6);
-    -webkit-box-shadow:0 0 18px #ffb515;
+    -webkit-box-shadow:0 0 18px #4C0000;
   }
 }
 @-webkit-keyframes black-blink {
   50% {
     filter: brightness(1.6);
     -webkit-filter: brightness(1.6);
-    -webkit-box-shadow:0 0 18px #ffb515;
+    -webkit-box-shadow:0 0 18px #4C0000;
 }
