@@ -1,11 +1,11 @@
 (function(){
+  'use strict';
   angular.module('myApp')
   .controller('ChessCtrl',
       ['$scope', '$log', '$timeout',
        'gameService', 'gameLogic', 'resizeGameAreaService',
       function ($scope, $log, $timeout,
         gameService, gameLogic,  resizeGameAreaService) {
-'use strict';
     resizeGameAreaService.setWidthToHeight(1);
 
     var selectedCells = [];       // record the clicked cells
