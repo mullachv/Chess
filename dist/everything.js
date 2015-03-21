@@ -100,7 +100,7 @@ angular.module('myApp', []).factory('gameLogic', function() {
  */
   function isTie(board, turnIndex, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition) {   
     if (!isUnderCheck[turnIndex]) {
-      var curPlayer = turnIndex === 0 ? 'W' : 'B';
+      var curPlayer = getTurn(turnIndex);
 
       for (var i = 0; i < 8; i++) {
         for (var j = 0; j < 8; j++) {
@@ -155,7 +155,7 @@ angular.module('myApp', []).factory('gameLogic', function() {
  */
  function getWinner(board, turnIndex, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition) {
     if (isUnderCheck[turnIndex]) {
-      var curPlayer = turnIndex === 0 ? 'W' : 'B';
+      var curPlayer = getTurn(turnIndex);
       var kingsPosition = findKingsPosition(board, turnIndex);
 
       // if there is no available moves for king
@@ -219,14 +219,14 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
       board = getInitialBoard();
     }
     // initialize all variables
-    if (!isUnderCheck) isUnderCheck = [false, false];
-    if (!canCastleKing) canCastleKing = [true, true];
-    if (!canCastleQueen) canCastleQueen = [true, true];
-    if (!enpassantPosition) enpassantPosition = {row: null, col: null};
+    if (!isUnderCheck) { isUnderCheck = [false, false]; }
+    if (!canCastleKing) { canCastleKing = [true, true]; }
+    if (!canCastleQueen) { canCastleQueen = [true, true]; }
+    if (!enpassantPosition) { enpassantPosition = {row: null, col: null}; }
 
     var destination = board[deltaTo.row][deltaTo.col];
 
-    if (destination !== '' && destination.charAt(0) === (turnIndexBeforeMove == 0 ? 'W' : 'B')) {
+    if (destination !== '' && destination.charAt(0) === (turnIndexBeforeMove === 0 ? 'W' : 'B')) {
       throw new Error("One can only make a move in an empty position or capture opponent's piece!");
     }
 
@@ -248,7 +248,7 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
         enpassantPositionAfterMove = angular.copy(enpassantPosition);
 
     var piece = board[deltaFrom.row][deltaFrom.col];
-    var turn = turnIndexBeforeMove === 0 ? 'W' : 'B';
+    var turn = getTurn(turnIndexBeforeMove);
 
     if (turn !== piece.charAt(0)) {
       throw new Error("Illegal to move this piece!");
@@ -387,16 +387,15 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
   function isCastlingKing(board, deltaFrom, deltaTo, turnIndex, canCastleKing) {
     var fromRow = deltaFrom.row,
         fromCol = deltaFrom.col,
-        toRow = deltaTo.row,
         toCol = deltaTo.col,
         caslingRow = (turnIndex === 0 ? 7 : 0),
-        turn = (turnIndex === 0 ? 'W' : 'B');
-    if (isPositionUnderAttack(board, turnIndex, deltaFrom)) return false;
+        turn = getTurn(turnIndex);
+    if (isPositionUnderAttack(board, turnIndex, deltaFrom)) { return false; }
     if (canCastleKing[turnIndex] && fromRow === caslingRow && 
       fromCol === 4 && toCol - fromCol === 2) {
       for (var j = 5; j <= 6; j++) {
-        if (board[fromRow][j] !== '') return false;
-        if (isPositionUnderAttack(board, turnIndex, {row: fromRow, col: j})) return false;
+        if (board[fromRow][j] !== '') { return false; }
+        if (isPositionUnderAttack(board, turnIndex, {row: fromRow, col: j})) { return false; }
       }
       return board[caslingRow][7] === turn + 'R';
     }
@@ -409,16 +408,15 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
   function isCastlingQueen(board, deltaFrom, deltaTo, turnIndex, canCastleQueen) {
     var fromRow = deltaFrom.row,
         fromCol = deltaFrom.col,
-        toRow = deltaTo.row,
         toCol = deltaTo.col,
         caslingRow = (turnIndex === 0 ? 7 : 0),
-        turn = (turnIndex === 0 ? 'W' : 'B');
-    if (isPositionUnderAttack(board, turnIndex, deltaFrom)) return false;
+        turn = getTurn(turnIndex);
+    if (isPositionUnderAttack(board, turnIndex, deltaFrom)) { return false; }
     if (canCastleQueen[turnIndex] && fromRow === caslingRow && 
       fromCol === 4 && fromCol - toCol === 2) {
       for (var j = 1; j <= 3; j++) {
-        if (board[fromRow][j] !== '') return false;
-        if (isPositionUnderAttack(board, turnIndex, {row: fromRow, col: j})) return false;
+        if (board[fromRow][j] !== '') { return false; }
+        if (isPositionUnderAttack(board, turnIndex, {row: fromRow, col: j})) { return false; }
       }
       return board[caslingRow][0] === turn + 'R';
     }
@@ -433,10 +431,10 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
         fromCol = deltaFrom.col,
         toRow = deltaTo.row,
         toCol = deltaTo.col;
-    if (toRow < 0 || toCol < 0 || toRow > 7 || toCol > 7) return false;
+    if (toRow < 0 || toCol < 0 || toRow > 7 || toCol > 7) { return false; }
     var endPiece = board[toRow][toCol];
     var opponent = getOpponent(turnIndex);
-    if (endPiece !== '' && endPiece.charAt(0) !== opponent) return false;
+    if (endPiece !== '' && endPiece.charAt(0) !== opponent) { return false; }
         
     for (var i = fromRow - 1; i <= fromRow + 1; i++) {
       for (var j = fromCol - 1; j <= fromCol + 1; j++) {
@@ -472,8 +470,9 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
         if (i >= 0 && i <= 7 && j >= 0 && j <= 7) {
           if (board[i][j] === '') {
             var curPos = {row: i, col: j};
-            if (moveAndCheck(board, turnIndex, startPos, curPos))
+            if (moveAndCheck(board, turnIndex, startPos, curPos)) {
               destinations.push(curPos);
+            }      
           }
         }
       }
@@ -495,7 +494,6 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
   */
   function isUnderCheckByPositions(board, turnIndex) {  
     var kingsPosition = findKingsPosition(board, turnIndex);
-    var opponent = getOpponent(turnIndex);
 
     if (kingsPosition) {
       return isPositionUnderAttack(board, turnIndex, kingsPosition);
@@ -509,8 +507,6 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
   * @position is the coordinate of the position
   */
   function isPositionUnderAttack(board, turnIndex, position) {
-    var row = position.row;
-    var col = position.col;
     var opponent = getOpponent(turnIndex);
     var attPositions = [];
 
@@ -520,18 +516,36 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
           var opponentPiece = board[i][j];
           var curPos = {row: i, col: j};
           switch (opponentPiece.charAt(1)) {
-            case 'K': if (canKingMove(board, curPos, position, 1 - turnIndex)) 
-                        attPositions.push(curPos); break;
-            case 'Q': if (canQueenMove(board, curPos, position, 1 - turnIndex)) 
-                        attPositions.push(curPos); break;
-            case 'R': if (canRookMove(board, curPos, position, 1 - turnIndex)) 
-                        attPositions.push(curPos); break;
-            case 'B': if (canBishopMove(board, curPos, position, 1 - turnIndex)) 
-                        attPositions.push(curPos); break;
-            case 'N': if (canKnightMove(board, curPos, position, 1 - turnIndex)) 
-                        attPositions.push(curPos); break;
-            case 'P': if (canPawnMove(board, curPos, position, 1 - turnIndex)) 
-                        attPositions.push(curPos); break;
+            case 'K': 
+              if (canKingMove(board, curPos, position, 1 - turnIndex)) {
+                attPositions.push(curPos);
+              }
+              break;
+            case 'Q':
+              if (canQueenMove(board, curPos, position, 1 - turnIndex)) {
+                attPositions.push(curPos); 
+              }
+              break;
+            case 'R':
+              if (canRookMove(board, curPos, position, 1 - turnIndex)) {
+                attPositions.push(curPos);
+              }
+              break;
+            case 'B':
+              if (canBishopMove(board, curPos, position, 1 - turnIndex)) {
+                attPositions.push(curPos);
+              }
+              break;
+            case 'N':
+              if (canKnightMove(board, curPos, position, 1 - turnIndex)) {
+                attPositions.push(curPos);
+              }
+              break;
+            case 'P':
+              if (canPawnMove(board, curPos, position, 1 - turnIndex)) {
+                attPositions.push(curPos);
+              }
+              break;
           }
         }
       }
@@ -546,7 +560,7 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
 
     for (var i = 0; i < 8; i++) {
       for (var j = 0; j < 8; j++) {
-        if (board[i][j] === kingPiece) return {row: i, col: j};
+        if (board[i][j] === kingPiece) { return {row: i, col: j}; }
       }
     }
     return;
@@ -584,22 +598,22 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
         fromCol = deltaFrom.col,
         toRow = deltaTo.row,
         toCol = deltaTo.col;
-    if (toRow < 0 || toCol < 0 || toRow > 7 || toCol > 7) return false;
+    if (toRow < 0 || toCol < 0 || toRow > 7 || toCol > 7) { return false; }
     var endPiece = board[toRow][toCol];
     var opponent = getOpponent(turnIndex);
-    if (endPiece !== '' && endPiece.charAt(0) !== opponent) return false;
+    if (endPiece !== '' && endPiece.charAt(0) !== opponent) { return false; }
         
     if (fromRow === toRow) {
-      if (fromCol === toCol) return false;
+      if (fromCol === toCol) { return false; }
       for (var i = (fromCol < toCol ? fromCol + 1 : toCol + 1); i < (fromCol < toCol ? toCol : fromCol); i++) {
-        if (board[fromRow][i] !== '') return false;
+        if (board[fromRow][i] !== '') { return false; }
       }
       return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
     }
     else if (fromCol === toCol) {
-      if (fromRow === toRow) return false;
-      for (var i = (fromRow < toRow ? fromRow + 1 : toRow + 1); i < (fromRow < toRow ? toRow : fromRow); i++) {
-        if (board[i][fromCol] !== '') return false;
+      if (fromRow === toRow) { return false; }
+      for (var j = (fromRow < toRow ? fromRow + 1 : toRow + 1); j < (fromRow < toRow ? toRow : fromRow); j++) {
+        if (board[j][fromCol] !== '') { return false; }
       }
       return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
     } else {
@@ -626,10 +640,10 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
           endPos2 = {row: fromRow - i, col: fromCol},
           endPos3 = {row: fromRow, col: fromCol + i},
           endPos4 = {row: fromRow, col: fromCol - i};
-      if (canRookMove(board, startPos, endPos1, turnIndex)) toPos.push(endPos1);
-      if (canRookMove(board, startPos, endPos2, turnIndex)) toPos.push(endPos2);
-      if (canRookMove(board, startPos, endPos3, turnIndex)) toPos.push(endPos3);
-      if (canRookMove(board, startPos, endPos4, turnIndex)) toPos.push(endPos4);
+      if (canRookMove(board, startPos, endPos1, turnIndex)) { toPos.push(endPos1); }
+      if (canRookMove(board, startPos, endPos2, turnIndex)) { toPos.push(endPos2); }
+      if (canRookMove(board, startPos, endPos3, turnIndex)) { toPos.push(endPos3); }
+      if (canRookMove(board, startPos, endPos4, turnIndex)) { toPos.push(endPos4); }
     }
     return toPos;
   }
@@ -642,10 +656,10 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
         fromCol = deltaFrom.col,
         toRow = deltaTo.row,
         toCol = deltaTo.col;
-    if (toRow < 0 || toCol < 0 || toRow > 7 || toCol > 7) return false;
+    if (toRow < 0 || toCol < 0 || toRow > 7 || toCol > 7) { return false; }
     var endPiece = board[toRow][toCol];
     var opponent = getOpponent(turnIndex);
-    if (endPiece !== '' && endPiece.charAt(0) !== opponent) return false;
+    if (endPiece !== '' && endPiece.charAt(0) !== opponent) { return false; }
         
     if ((fromRow === toRow && fromCol === toCol) || 
       (Math.abs(fromRow - toRow) !== Math.abs(fromCol - toCol))) {
@@ -659,7 +673,7 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
         } else {
           cell = board[fromRow - i][fromCol < toCol ? fromCol + i : fromCol - i];
         }
-        if (cell !== '') return false;
+        if (cell !== '') { return false; }
       }
       return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
     }
@@ -684,10 +698,10 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
           endPos2 = {row: fromRow - i, col: fromCol + i},
           endPos3 = {row: fromRow + i, col: fromCol - i},
           endPos4 = {row: fromRow + i, col: fromCol + i};
-      if (canBishopMove(board, startPos, endPos1, turnIndex)) toPos.push(endPos1);
-      if (canBishopMove(board, startPos, endPos2, turnIndex)) toPos.push(endPos2);
-      if (canBishopMove(board, startPos, endPos3, turnIndex)) toPos.push(endPos3);
-      if (canBishopMove(board, startPos, endPos4, turnIndex)) toPos.push(endPos4);
+      if (canBishopMove(board, startPos, endPos1, turnIndex)) { toPos.push(endPos1); }
+      if (canBishopMove(board, startPos, endPos2, turnIndex)) { toPos.push(endPos2); }
+      if (canBishopMove(board, startPos, endPos3, turnIndex)) { toPos.push(endPos3); }
+      if (canBishopMove(board, startPos, endPos4, turnIndex)) { toPos.push(endPos4); }
     }
     return toPos;
   }
@@ -700,10 +714,10 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
         fromCol = deltaFrom.col,
         toRow = deltaTo.row,
         toCol = deltaTo.col;
-    if (toRow < 0 || toCol < 0 || toRow > 7 || toCol > 7) return false;
+    if (toRow < 0 || toCol < 0 || toRow > 7 || toCol > 7) { return false; }
     var endPiece = board[toRow][toCol];
     var opponent = getOpponent(turnIndex);
-    if (endPiece !== '' && endPiece.charAt(0) !== opponent) return false;
+    if (endPiece !== '' && endPiece.charAt(0) !== opponent) { return false; }
 
     if (Math.abs(fromRow - toRow) === 2 && Math.abs(fromCol - toCol) === 1) {
       return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
@@ -734,10 +748,10 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
         var endPos2 = {row: i, col: fromCol - 2};
         var endPos3 = {row: i, col: fromCol + 1};
         var endPos4 = {row: i, col: fromCol + 2};
-        if (canKnightMove(board, startPos, endPos1, turnIndex)) toPos.push(endPos1);
-        if (canKnightMove(board, startPos, endPos2, turnIndex)) toPos.push(endPos2);
-        if (canKnightMove(board, startPos, endPos3, turnIndex)) toPos.push(endPos3);
-        if (canKnightMove(board, startPos, endPos4, turnIndex)) toPos.push(endPos4);
+        if (canKnightMove(board, startPos, endPos1, turnIndex)) { toPos.push(endPos1); }
+        if (canKnightMove(board, startPos, endPos2, turnIndex)) { toPos.push(endPos2); }
+        if (canKnightMove(board, startPos, endPos3, turnIndex)) { toPos.push(endPos3); }
+        if (canKnightMove(board, startPos, endPos4, turnIndex)) { toPos.push(endPos4); }
       }
     }
     return toPos;   
@@ -751,11 +765,11 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
         fromCol = deltaFrom.col,
         toRow = deltaTo.row,
         toCol = deltaTo.col,
-        turn = board[fromRow][fromCol].charAt(0);
-    if (toRow < 0 || toCol < 0 || toRow > 7 || toCol > 7) return false;
+        turn = getTurn(turnIndex);
+    if (toRow < 0 || toCol < 0 || toRow > 7 || toCol > 7) { return false; }
     var endPiece = board[toRow][toCol];
     var opponent = getOpponent(turnIndex);
-    if (endPiece !== '' && endPiece.charAt(0) !== opponent) return false;
+    if (endPiece !== '' && endPiece.charAt(0) !== opponent) { return false; }
 
     // check if is first move with two squares
     if (Math.abs(fromRow - toRow) === 2 && toCol === fromCol && 
@@ -790,16 +804,21 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
     var fromRow = startPos.row,
         fromCol = startPos.col,
         toPos = [],
-        turn = (turnIndex === 0 ? 'W' : 'B');
+        turn = getTurn(turnIndex),
+        endRow;
 
     for (var j = fromCol - 1; j <= fromCol + 1; j++) {
-      var endRow = (turn === 'W' ? fromRow - 1 : fromRow + 1);
+      endRow = (turn === 'W' ? fromRow - 1 : fromRow + 1);
       var endPos = {row: endRow, col: j};
-      if (canPawnMove(board, startPos, endPos, turnIndex)) toPos.push(endPos);
+      if (canPawnMove(board, startPos, endPos, turnIndex, enpassantPosition)) {
+        toPos.push(endPos);
+      }
     }
-    var endRow = (turn === 'W' ? fromRow - 2 : fromRow + 2);
+    endRow = (turn === 'W' ? fromRow - 2 : fromRow + 2);
     var endPos2 = {row:endRow, col: fromCol};
-    if (canPawnMove(board, startPos, endPos2, turnIndex)) toPos.push(endPos2);
+    if (canPawnMove(board, startPos, endPos2, turnIndex, enpassantPosition)) {
+      toPos.push(endPos2);
+    }
     return toPos;
   }
 
@@ -816,11 +835,11 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
         toRow = endPos.row,
         toCol = endPos.col,
         opponent = getOpponent(turnIndex);
-    if (board[toRow][toCol] === opponent + 'K') return true;
+    if (board[toRow][toCol] === opponent + 'K') { return true; }
     var boardAfterMove = angular.copy(board);
     boardAfterMove[toRow][toCol] = boardAfterMove[fromRow][fromCol];
     boardAfterMove[fromRow][fromCol] = '';
-    if (isUnderCheckByPositions(boardAfterMove, turnIndex)) return false;
+    if (isUnderCheckByPositions(boardAfterMove, turnIndex)) { return false; }
     return true;
   }
 
@@ -830,6 +849,14 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
   function getOpponent(turnIndex) {
     return (turnIndex === 0 ? 'B' : 'W');
   }
+
+  /**
+  * Returns turnIndex initial
+  */
+  function getTurn(turnIndex) {
+    return (turnIndex === 0 ? 'W' : 'B');
+  }
+
 
  /**
   * Check if the move is OK.
