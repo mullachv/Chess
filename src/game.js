@@ -15,13 +15,19 @@
             $scope.isUnderCheck, $scope.canCastleKing,
             $scope.canCastleQueen, $scope.enpassantPosition);
       if (possibleMoves.length) {
-        for (var i = 0; i < possibleMoves.length; i++) {
-          if (possibleMoves[i] && possibleMoves[i][1].length) {
-            $scope.deltaFrom = possibleMoves[i][0];
-            $scope.deltaTo = possibleMoves[i][1][0];
-            break;
-          }
-        }
+        // for (var i = 0; i < possibleMoves.length; i++) {
+        //   if (possibleMoves[i] && possibleMoves[i][1].length) {
+        //     $scope.deltaFrom = possibleMoves[i][0];
+        //     $scope.deltaTo = possibleMoves[i][1][0];
+        //     break;
+        //   }
+        // }
+        var index1 = Math.floor(Math.random() * possibleMoves.length);
+        var pm = possibleMoves[index1];
+        var index2 = Math.floor(Math.random() * pm[1].length);
+        $scope.deltaFrom = pm[0];
+        $scope.deltaTo = pm[1][index2];
+
         gameService.makeMove(gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
             $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
             $scope.canCastleQueen, $scope.enpassantPosition));

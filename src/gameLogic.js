@@ -939,7 +939,14 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
         }
       }
     }
-    return possibleMoves;
+
+    var realPossibleMoves = [];
+    for (var a = 0; a < possibleMoves.length; a++) {
+      if (possibleMoves[a] && possibleMoves[a][1].length) {
+        realPossibleMoves.push(possibleMoves[a]);
+      }
+    }
+    return realPossibleMoves;
   }
 
   return {
