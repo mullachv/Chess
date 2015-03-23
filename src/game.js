@@ -3,9 +3,12 @@
   angular.module('myApp')
   .controller('ChessCtrl',
       ['$scope', '$log', '$timeout',
-       'gameService', 'gameLogic', 'resizeGameAreaService',
+       'gameService', 'stateService', 'gameLogic', 
+       'resizeGameAreaService', '$translate',
       function ($scope, $log, $timeout,
-        gameService, gameLogic,  resizeGameAreaService) {
+        gameService, stateService, gameLogic, 
+        resizeGameAreaService, $translate) {
+
     resizeGameAreaService.setWidthToHeight(1);
 
     var selectedCells = [];       // record the clicked cells
@@ -15,13 +18,6 @@
             $scope.isUnderCheck, $scope.canCastleKing,
             $scope.canCastleQueen, $scope.enpassantPosition);
       if (possibleMoves.length) {
-        // for (var i = 0; i < possibleMoves.length; i++) {
-        //   if (possibleMoves[i] && possibleMoves[i][1].length) {
-        //     $scope.deltaFrom = possibleMoves[i][0];
-        //     $scope.deltaTo = possibleMoves[i][1][0];
-        //     break;
-        //   }
-        // }
         var index1 = Math.floor(Math.random() * possibleMoves.length);
         var pm = possibleMoves[index1];
         var index2 = Math.floor(Math.random() * pm[1].length);
@@ -87,6 +83,7 @@
       // clear up the selectedCells and waiting for next valid move
       selectedCells = [];    
     }
+    window.e2e_test_stateService = stateService;
 
     $scope.cellClicked = function (row, col) {
       $log.info(["Clicked on cell:", row, col]);
@@ -187,6 +184,14 @@
         default: return '';
       }
     }
+
+    $scope.getPieceKindInId = function(row, col) {
+      if ($scope.rotate) {
+        row = 7 - row;
+        col = 7 - col;
+      }
+      return board[row][col];
+    };
 
     $scope.getBackgroundSrc = function(row, col) {
       if (isLight(row, col)) { return 'imgs/Chess-lightCell.png'; }

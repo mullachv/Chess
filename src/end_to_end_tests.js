@@ -3,25 +3,18 @@
 describe('Chess', function() {
 
   'use strict';
-
-  var _gameLogic, board;
-
-  beforeEach(module("myApp"));
-
-  beforeEach(inject(function (gameLogic) {
-    _gameLogic = gameLogic;
-  }));
-
+  
   beforeEach(function() {
     browser.get('http://localhost:9000/game.min.html');
   });
+
 
   function getDiv(row, col) {
     return element(by.id('e2e_test_div_' + row + 'x' + col));
   }
 
   function getPiece(row, col, pieceKind) {
-    return element(by.id('e2e_test_piece' + pieceKind + '_' + row + 'x' + col));
+    return element(by.id('e2e_test_img_' + pieceKind + '_' + row + 'x' + col));
   }
 
   function expectPiece(row, col, pieceKind) {
@@ -29,21 +22,33 @@ describe('Chess', function() {
     // Originally, my animation started from {opacity: 0;}
     // And then the image wasn't displayed.
     // I changed it to start from {opacity: 0.1;}
-    expect(getPiece(row, col, 'X').isDisplayed()).toEqual(pieceKind === "X" ? true : false);
-    expect(getPiece(row, col, 'O').isDisplayed()).toEqual(pieceKind === "O" ? true : false);
+    expect(getPiece(row, col, 'WK').isDisplayed()).toEqual(pieceKind === "WK" ? true : false);
+    expect(getPiece(row, col, 'WQ').isDisplayed()).toEqual(pieceKind === "WQ" ? true : false);
+    expect(getPiece(row, col, 'WR').isDisplayed()).toEqual(pieceKind === "WR" ? true : false);
+    expect(getPiece(row, col, 'WB').isDisplayed()).toEqual(pieceKind === "WB" ? true : false);
+    expect(getPiece(row, col, 'WN').isDisplayed()).toEqual(pieceKind === "WN" ? true : false);
+    expect(getPiece(row, col, 'WP').isDisplayed()).toEqual(pieceKind === "WP" ? true : false);
+    expect(getPiece(row, col, 'BK').isDisplayed()).toEqual(pieceKind === "BK" ? true : false);
+    expect(getPiece(row, col, 'BQ').isDisplayed()).toEqual(pieceKind === "BQ" ? true : false);
+    expect(getPiece(row, col, 'BR').isDisplayed()).toEqual(pieceKind === "BR" ? true : false);
+    expect(getPiece(row, col, 'BB').isDisplayed()).toEqual(pieceKind === "BB" ? true : false);
+    expect(getPiece(row, col, 'BN').isDisplayed()).toEqual(pieceKind === "BN" ? true : false);
+    expect(getPiece(row, col, 'BP').isDisplayed()).toEqual(pieceKind === "BP" ? true : false);
   }
 
   function expectBoard(board) {
-    for (var row = 0; row < 3; row++) {
-      for (var col = 0; col < 3; col++) {
+    for (var row = 0; row < 8; row++) {
+      for (var col = 0; col < 8; col++) {
         expectPiece(row, col, board[row][col]);
       }
     }
   }
 
-  function clickDivAndExpectPiece(row, col, pieceKind) {
-    getDiv(row, col).click();
-    expectPiece(row, col, pieceKind);
+  function clickDivsAndExpectPiece(deltaFrom, deltaTo, pieceKind) {
+    getDiv(deltaFrom.row, deltaFrom.col).click();
+    getDiv(deltaTo.row, deltaTo.col).click();
+
+    expectPiece(deltaTo.row, deltaTo.col, pieceKind);
   }
 
   // playMode is either: 'passAndPlay', 'playAgainstTheComputer', 'onlyAIs',
@@ -63,23 +68,36 @@ describe('Chess', function() {
 
   it('should have an empty Chess board', function () {
     expectBoard(
-        [['', '', ''],
-         ['', '', ''],
-         ['', '', '']]);
+      ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
+      ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'], 
+      ['', '', '', '', '', '', '', ''],  
+      ['', '', '', '', '', '', '', ''], 
+      ['', '', '', '', '', '', '', ''],  
+      ['', '', '', '', '', '', '', ''], 
+      ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],
+      ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR']);
   });
 
-  it('should show X if I click in 0x0', function () {
-    clickDivAndExpectPiece(0, 0, "X");
+  it('should show WP in 5x5 if I move it from 6x5', function () {
+    var deltaFrom = {row: 6, col: 5};
+    var deltaTo = {row: 5, col: 5};
+
+    clickDivsAndExpectPiece(deltaFrom, deltaTo, "WP");
     expectBoard(
-        [['X', '', ''],
-         ['', '', ''],
-         ['', '', '']]);
+      ['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
+      ['BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP', 'BP'], 
+      ['', '', '', '', '', '', '', ''],  
+      ['', '', '', '', '', '', '', ''], 
+      ['', '', '', '', '', '', '', ''],  
+      ['', '', '', '', '', 'WP', '', ''], 
+      ['WP', 'WP', 'WP', 'WP', 'WP', '', 'WP', 'WP'],
+      ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR']);
   });
 
   it('should ignore clicking on a non-empty cell', function () {
-    clickDivAndExpectPiece(0, 0, "X");
-    clickDivAndExpectPiece(0, 0, "X"); // clicking on a non-empty cell doesn't do anything.
-    clickDivAndExpectPiece(1, 1, "O");
+    clickDivsAndExpectPiece(0, 0, "X");
+    clickDivsAndExpectPiece(0, 0, "X"); // clicking on a non-empty cell doesn't do anything.
+    clickDivsAndExpectPiece(1, 1, "O");
     expectBoard(
         [['X', '', ''],
          ['', 'O', ''],
@@ -88,9 +106,9 @@ describe('Chess', function() {
 
   it('should end game if X wins', function () {
     for (var col = 0; col < 3; col++) {
-      clickDivAndExpectPiece(1, col, "X");
+      clickDivsAndExpectPiece(1, col, "X");
       // After the game ends, player "O" click (in cell 2x2) will be ignored.
-      clickDivAndExpectPiece(2, col, col === 2 ? "" : "O");
+      clickDivsAndExpectPiece(2, col, col === 2 ? "" : "O");
     }
     expectBoard(
         [['', '', ''],
@@ -99,15 +117,15 @@ describe('Chess', function() {
   });
 
   it('should end the game in tie', function () {
-    clickDivAndExpectPiece(0, 0, "X");
-    clickDivAndExpectPiece(1, 0, "O");
-    clickDivAndExpectPiece(0, 1, "X");
-    clickDivAndExpectPiece(1, 1, "O");
-    clickDivAndExpectPiece(1, 2, "X");
-    clickDivAndExpectPiece(0, 2, "O");
-    clickDivAndExpectPiece(2, 0, "X");
-    clickDivAndExpectPiece(2, 1, "O");
-    clickDivAndExpectPiece(2, 2, "X");
+    clickDivsAndExpectPiece(0, 0, "X");
+    clickDivsAndExpectPiece(1, 0, "O");
+    clickDivsAndExpectPiece(0, 1, "X");
+    clickDivsAndExpectPiece(1, 1, "O");
+    clickDivsAndExpectPiece(1, 2, "X");
+    clickDivsAndExpectPiece(0, 2, "O");
+    clickDivsAndExpectPiece(2, 0, "X");
+    clickDivsAndExpectPiece(2, 1, "O");
+    clickDivsAndExpectPiece(2, 2, "X");
     expectBoard(
         [['X', 'X', 'O'],
          ['O', 'O', 'X'],
@@ -175,8 +193,8 @@ describe('Chess', function() {
   it('can start from a match that is about to end, and win', function () {
     setMatchState(matchState2, 'passAndPlay');
     expectBoard(board2);
-    clickDivAndExpectPiece(2, 0, "X"); // winning click!
-    clickDivAndExpectPiece(2, 1, ""); // can't click after game ended
+    clickDivsAndExpectPiece(2, 0, "X"); // winning click!
+    clickDivsAndExpectPiece(2, 1, ""); // can't click after game ended
     expectBoard(board3);
   });
 
@@ -185,14 +203,14 @@ describe('Chess', function() {
     // you can't do the winning click!
     setMatchState(matchState2, 1); // playMode=1 means that yourPlayerIndex=1.
     expectBoard(board2);
-    clickDivAndExpectPiece(2, 0, ""); // can't do the winning click!
+    clickDivsAndExpectPiece(2, 0, ""); // can't do the winning click!
     expectBoard(board2);
   });
 
   it('can start from a match that ended', function () {
     setMatchState(matchState3, 'passAndPlay');
     expectBoard(board3);
-    clickDivAndExpectPiece(2, 1, ""); // can't click after game ended
+    clickDivsAndExpectPiece(2, 1, ""); // can't click after game ended
   });
 
   it('should make an AI move after at most 1.5 seconds', function () {
@@ -202,12 +220,12 @@ describe('Chess', function() {
         [['X', 'O', ''],
          ['X', 'O', ''],
          ['O', 'X', '']]);
-    clickDivAndExpectPiece(2, 2, "X"); // Human-player X did a very stupid move!
+    clickDivsAndExpectPiece(2, 2, "X"); // Human-player X did a very stupid move!
     browser.sleep(1500); // AI will now make the winning move
     expectBoard(
         [['X', 'O', 'O'],
          ['X', 'O', ''],
          ['O', 'X', 'X']]);
-    clickDivAndExpectPiece(1, 2, ""); // Can't make a move after game is over
+    clickDivsAndExpectPiece(1, 2, ""); // Can't make a move after game is over
   });
 });

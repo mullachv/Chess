@@ -939,7 +939,14 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
         }
       }
     }
-    return possibleMoves;
+
+    var realPossibleMoves = [];
+    for (var a = 0; a < possibleMoves.length; a++) {
+      if (possibleMoves[a] && possibleMoves[a][1].length) {
+        realPossibleMoves.push(possibleMoves[a]);
+      }
+    }
+    return realPossibleMoves;
   }
 
   return {
@@ -962,9 +969,12 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
   angular.module('myApp')
   .controller('ChessCtrl',
       ['$scope', '$log', '$timeout',
-       'gameService', 'gameLogic', 'resizeGameAreaService',
+       'gameService', 'stateService', 'gameLogic', 
+       'resizeGameAreaService', '$translate',
       function ($scope, $log, $timeout,
-        gameService, gameLogic,  resizeGameAreaService) {
+        gameService, stateService, gameLogic, 
+        resizeGameAreaService, $translate) {
+
     resizeGameAreaService.setWidthToHeight(1);
 
     var selectedCells = [];       // record the clicked cells
@@ -974,13 +984,12 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
             $scope.isUnderCheck, $scope.canCastleKing,
             $scope.canCastleQueen, $scope.enpassantPosition);
       if (possibleMoves.length) {
-        for (var i = 0; i < possibleMoves.length; i++) {
-          if (possibleMoves[i] && possibleMoves[i][1].length) {
-            $scope.deltaFrom = possibleMoves[i][0];
-            $scope.deltaTo = possibleMoves[i][1][0];
-            break;
-          }
-        }
+        var index1 = Math.floor(Math.random() * possibleMoves.length);
+        var pm = possibleMoves[index1];
+        var index2 = Math.floor(Math.random() * pm[1].length);
+        $scope.deltaFrom = pm[0];
+        $scope.deltaTo = pm[1][index2];
+
         gameService.makeMove(gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
             $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
             $scope.canCastleQueen, $scope.enpassantPosition));
@@ -1040,6 +1049,7 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
       // clear up the selectedCells and waiting for next valid move
       selectedCells = [];    
     }
+    window.e2e_test_stateService = stateService;
 
     $scope.cellClicked = function (row, col) {
       $log.info(["Clicked on cell:", row, col]);
@@ -1125,25 +1135,25 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
 
     function getPieceKind(cell){
       switch(cell) {
-        case 'WK': return 'img/Chess-whiteKing.png';
-        case 'WQ': return 'img/Chess-whiteQueen.png';
-        case 'WR': return 'img/Chess-whiteRook.png';
-        case 'WB': return 'img/Chess-whiteBishop.png';
-        case 'WN': return 'img/Chess-whiteKnight.png';
-        case 'WP': return 'img/Chess-whitePawn.png';
-        case 'BK': return 'img/Chess-blackKing.png';
-        case 'BQ': return 'img/Chess-blackQueen.png';
-        case 'BR': return 'img/Chess-blackRook.png';
-        case 'BB': return 'img/Chess-blackBishop.png';
-        case 'BN': return 'img/Chess-blackKnight.png';
-        case 'BP': return 'img/Chess-blackPawn.png';
+        case 'WK': return 'imgs/Chess-whiteKing.png';
+        case 'WQ': return 'imgs/Chess-whiteQueen.png';
+        case 'WR': return 'imgs/Chess-whiteRook.png';
+        case 'WB': return 'imgs/Chess-whiteBishop.png';
+        case 'WN': return 'imgs/Chess-whiteKnight.png';
+        case 'WP': return 'imgs/Chess-whitePawn.png';
+        case 'BK': return 'imgs/Chess-blackKing.png';
+        case 'BQ': return 'imgs/Chess-blackQueen.png';
+        case 'BR': return 'imgs/Chess-blackRook.png';
+        case 'BB': return 'imgs/Chess-blackBishop.png';
+        case 'BN': return 'imgs/Chess-blackKnight.png';
+        case 'BP': return 'imgs/Chess-blackPawn.png';
         default: return '';
       }
     }
 
     $scope.getBackgroundSrc = function(row, col) {
-      if (isLight(row, col)) { return 'img/Chess-lightCell.png'; }
-      else { return 'img/Chess-darkCell.png'; }
+      if (isLight(row, col)) { return 'imgs/Chess-lightCell.png'; }
+      else { return 'imgs/Chess-darkCell.png'; }
     };
 
     function isLight(row, col) {
