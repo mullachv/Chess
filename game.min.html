@@ -50,7 +50,7 @@
                             isWhitePiece: isWhitePiece(row, col)}"
               ng-show="shouldShowImage(row, col)"
               ng-src="{{getImageSrc(row, col)}}"
-              id="{{'e2e_test_img_' + row + 'x' + col}}">
+              id="{{'e2e_test_img_' + getPieceKindInId(row, col) + '_' + row + 'x' + col}}">
           </div>
       </div>
     </div>

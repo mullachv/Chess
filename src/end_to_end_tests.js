@@ -13,7 +13,7 @@ describe('Chess', function() {
       ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR']];
   
   beforeEach(function() {
-    browser.get('http://localhost:9000/game.html');
+    browser.get('http://localhost:9000/game.min.html');
   });
 
 
@@ -50,6 +50,7 @@ describe('Chess', function() {
         expect(getPiece(row, col, 'WP').isDisplayed()).toEqual(pieceKind === "WP" ? true : false);
         break;
       case 'BK':
+      console.log("going to getPiece: " + row + ", " + col);
         expect(getPiece(row, col, 'BK').isDisplayed()).toEqual(pieceKind === "BK" ? true : false);
         break;
       case 'BQ':
@@ -120,8 +121,47 @@ describe('Chess', function() {
     clickDivsAndExpectPiece({row: 6, col: 5}, {row: 6, col: 4}, "WP");
     expectBoard(initialBoard);
   });
+  
+  var initialIsUnderCheck = [false, false],
+      initialCanCastleKing = [true, true],
+      initialCanCastleQueen = [true, true],
+      initialEnpassantPosition = {row: null, col: null};
 
-  var deltaFrom1 = {row: 1, col: 4},
+  function setMatchState2(turnIndexBeforeMove, lastState, currentState) {
+    return {
+      turnIndexBeforeMove: turnIndexBeforeMove,
+      turnIndex: 1 - turnIndexBeforeMove,
+      endMatchScores: null,
+      lastMove: [{setTurn: {turnIndex: 1 - turnIndexBeforeMove}},
+            {set: {key: 'board', value: currentState.board}},
+            {set: {key: 'deltaFrom', value: currentState.deltaFrom}},
+            {set: {key: 'deltaTo', value: currentState.deltaTo}},
+            {set: {key: 'isUnderCheck', value: currentState.isUnderCheck}},
+            {set: {key: 'canCastleKing', value: currentState.canCastleKing}},
+            {set: {key: 'canCastleQueen', value: currentState.canCastleQueen}},
+            {set: {key: 'enpassantPosition', value: currentState.enpassantPosition}}],
+      lastState: lastState,
+      currentState: currentState,
+      lastVisibleTo: {},
+      currentVisibleTo: {}
+    };
+  }
+
+  function getStateParameters(board, deltaFrom, deltaTo, isUnderCheck, canCastleKing,
+                              canCastleQueen, enpassantPosition) {
+    return {
+      board: board,
+      deltaFrom: deltaFrom,
+      deltaTo: deltaTo,
+      isUnderCheck: isUnderCheck,
+      canCastleKing: canCastleKing,
+      canCastleQueen: canCastleQueen,
+      enpassantPosition: enpassantPosition
+    };
+  }
+
+  it('should end game if W wins by checkmate', function () {
+    var deltaFrom1 = {row: 1, col: 4},
       deltaTo1 = {row: 3, col: 4},
       board1 = [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
           ['BP', 'BP', 'BP', 'BP', '', 'BP', 'BP', 'BP'], 
@@ -132,7 +172,7 @@ describe('Chess', function() {
           ['WP', 'WP', 'WP', 'WP', 'WP', '', 'WP', 'WP'],  
           ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR']];
 
-  var deltaFrom2 = {row: 6, col: 6},
+    var deltaFrom2 = {row: 6, col: 6},
       deltaTo2 = {row: 4, col: 6},
       board2 = [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
           ['BP', 'BP', 'BP', 'BP', '', 'BP', 'BP', 'BP'], 
@@ -143,9 +183,9 @@ describe('Chess', function() {
           ['WP', 'WP', 'WP', 'WP', 'WP', '', '', 'WP'],  
           ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR']];
 
-  var deltaFrom3 = {row: 0, col: 3},
+    var deltaFrom3 = {row: 0, col: 3},
       deltaTo3 = {row: 4, col: 7},
-      board3 = [['BR', 'BN', 'BB', '', 'BK', 'BB', 'BN', 'BR'], 
+      board_checkmate = [['BR', 'BN', 'BB', '', 'BK', 'BB', 'BN', 'BR'], 
           ['BP', 'BP', 'BP', 'BP', '', 'BP', 'BP', 'BP'], 
           ['', '', '', '', '', '', '', ''],  
           ['', '', '', '', 'BP', '', '', ''], 
@@ -153,42 +193,64 @@ describe('Chess', function() {
           ['', '', '', '', '', 'WP', '', ''], 
           ['WP', 'WP', 'WP', 'WP', 'WP', '', '', 'WP'],  
           ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR']];  // a wining board for black
-  var initialIsUnderCheck = [false, false],
-      initialCanCastleKing = [true, true],
-      initialCanCastleQueen = [true, true],
-      initialEnpassantPosition = {row: null, col: null};
 
-  var matchState2 = {
-    turnIndexBeforeMove: 0,
-    turnIndex: 1,
-    endMatchScores: null,
-    lastMove: [{setTurn: {turnIndex: 1}},
-          {set: {key: 'board', value: board2}},
-          {set: {key: 'deltaFrom', value: deltaFrom2}},
-          {set: {key: 'deltaTo', value: deltaTo2}},
-          {set: {key: 'isUnderCheck', value: initialIsUnderCheck}},
-          {set: {key: 'canCastleKing', value: initialCanCastleKing}},
-          {set: {key: 'canCastleQueen', value: initialCanCastleQueen}},
-          {set: {key: 'enpassantPosition', value: initialEnpassantPosition}}],
-    lastState: {
-      board: board1, deltaFrom: deltaFrom1, deltaTo: deltaTo1,
-      isUnderCheck: initialIsUnderCheck, canCastleKing: initialCanCastleKing,
-      canCastleQueen: initialCanCastleQueen, enpassantPosition: initialEnpassantPosition 
-    },
-    currentState: {
-      board: board2, deltaFrom: deltaFrom2, deltaTo: deltaTo2,
-      isUnderCheck: initialIsUnderCheck, canCastleKing: initialCanCastleKing,
-      canCastleQueen: initialCanCastleQueen, enpassantPosition: initialEnpassantPosition 
-    },
-    lastVisibleTo: {},
-    currentVisibleTo: {},
-  };
-
-  it('should end game if W wins by checkmate', function () {
+    var lastState = getStateParameters(board1, deltaFrom1, deltaTo1, initialIsUnderCheck,
+                  initialCanCastleKing, initialCanCastleQueen, initialEnpassantPosition);
+    var currentState = getStateParameters(board2, deltaFrom2, deltaTo2, initialIsUnderCheck,
+                  initialCanCastleKing, initialCanCastleQueen, initialEnpassantPosition);
+    var matchState2 = setMatchState2(0, lastState, currentState);
     setMatchState(matchState2, 'passAndPlay');
     expectBoard(board2);
     clickDivsAndExpectPiece(deltaFrom3, deltaTo3, "BQ"); // winning click!
-    expectBoard(board3);
+    expectBoard(board_checkmate);
+  });
+
+  
+  it('should end game if there is a stalemate', function () {
+    var deltaFrom1 = {row: 1, col: 3},
+        deltaTo1 = {row: 1, col: 4},
+        board1 = [['', '', '', '', '', '', '', ''], 
+          ['', '', '', '', 'WK', '', 'BK', ''], 
+          ['', '', '', '', '', '', '', ''],  
+          ['', '', '', '', '', '', '', ''], 
+          ['', '', '', '', '', '', '', ''],  
+          ['', '', '', '', '', '', '', ''], 
+          ['', '', '', '', '', '', '', ''],  
+          ['', '', '', '', '', '', 'WQ', '']];
+
+    var deltaFrom2 = {row: 1, col: 6},
+        deltaTo2 = {row: 0, col: 7},
+        board2 = [['', '', '', '', '', '', '', 'BK'], 
+          ['', '', '', '', 'WK', '', '', ''], 
+          ['', '', '', '', '', '', '', ''],  
+          ['', '', '', '', '', '', '', ''], 
+          ['', '', '', '', '', '', '', ''],  
+          ['', '', '', '', '', '', '', ''], 
+          ['', '', '', '', '', '', '', ''],  
+          ['', '', '', '', '', '', 'WQ', '']];
+
+
+    var deltaFrom3 = {row: 7, col: 6},
+        deltaTo3 = {row: 2, col: 6},
+        board_stalemate = [['', '', '', '', '', '', '', 'BK'], 
+          ['', '', '', '', '', 'WK', '', ''], 
+          ['', '', '', '', '', '', 'WQ', ''],  
+          ['', '', '', '', '', '', '', ''], 
+          ['', '', '', '', '', '', '', ''],  
+          ['', '', '', '', '', '', '', ''], 
+          ['', '', '', '', '', '', '', ''],  
+          ['', '', '', '', '', '', '', '']];  // a wining board for black
+
+    var lastState = getStateParameters(board1, deltaFrom1, deltaTo1, [false, true],
+                  initialCanCastleKing, initialCanCastleQueen, initialEnpassantPosition);
+    var currentState = getStateParameters(board2, deltaFrom2, deltaTo2, initialIsUnderCheck,
+                  initialCanCastleKing, initialCanCastleQueen, initialEnpassantPosition);
+    var matchState2 = setMatchState2(1, lastState, currentState);
+  
+    setMatchState(matchState2, 'passAndPlay');
+    expectBoard(board2);
+    clickDivsAndExpectPiece(deltaFrom3, deltaTo3, "WQ"); // click caused stalemate
+    expectBoard(board_stalemate);
   });
 
 });
