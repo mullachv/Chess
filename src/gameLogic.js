@@ -39,10 +39,10 @@
    * 1 - setBoard: {set: {key: 'board', value: [[...], ..., [...]]}}
    * 2 - setDeltaFrom: {set: {key: 'deltaFrom', value: {row: row, col: col}}}
    * 3 - setDeltaTo: {set: {key: 'deltaTo', value: {row: row, col: col}}}
-   * 4 - setIsUnderCheck: {set: {key: 'isUnderCheck', value: isUnderCheck}},
-   * 5 - setCanCastleKing: {set: {key: 'canCastleKing', value: {[true, true]}}},
-   * 6 - setCanCaseltQueen: {set: {key: 'canCastleQueen', value: {[true, true]}}},
-   * 7 - setEnpassantPosition: {set: {key: 'enpassantPosition', value: {row: undefined, col: undefined}}}
+   * 4 - setIsUnderCheck: {set: {key: 'isUnderCheck', value: [fasle, false]}},
+   * 5 - setCanCastleKing: {set: {key: 'canCastleKing', value: [true, true]}},
+   * 6 - setCanCaseltQueen: {set: {key: 'canCastleQueen', value: [true, true]}},
+   * 7 - setEnpassantPosition: {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
    *
    * Notes: move[0] can be either setTurn or endMatch
    *
@@ -63,7 +63,7 @@
    *       {set: {key: 'isUnderCheck', value: [false, false]}},
    *       {set: {key: 'canCastleKing', value: [true, true]}},
    *       {set: {key: 'canCastleQueen', value: [true, true]}},
-   *       {set: {key: 'enpassantPosition', value: {row: undefined, col: undefined}}}
+   *       {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
    *      ]
    *
    * some helpful background knowledge of Chess rules:

@@ -186,11 +186,14 @@
     }
 
     $scope.getPieceKindInId = function(row, col) {
-      if ($scope.rotate) {
-        row = 7 - row;
-        col = 7 - col;
+      if ($scope.board) {
+        if ($scope.rotate) {
+          row = 7 - row;
+          col = 7 - col;
+        }
+        return $scope.board[row][col];
       }
-      return board[row][col];
+      
     };
 
     $scope.getBackgroundSrc = function(row, col) {
