@@ -248,9 +248,55 @@ describe('Chess', function() {
     var matchState2 = setMatchState2(1, lastState, currentState);
   
     setMatchState(matchState2, 'passAndPlay');
+    browser.pause();
     expectBoard(board2);
     clickDivsAndExpectPiece(deltaFrom3, deltaTo3, "WQ"); // click caused stalemate
     expectBoard(board_stalemate);
+  });
+
+it('should perform enpassant for moving WP from 3x5 to 2x4', function () {
+    var deltaFrom1 = {row: 4, col: 6},
+      deltaTo1 = {row: 3, col: 6},
+      board1 = [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
+          ['BP', 'BP', '', 'BP', 'BP', 'BP', 'BP', 'BP'], 
+          ['', '', '', '', '', '', '', ''],  
+          ['', '', 'BP', '', '', '', 'WP', ''], 
+          ['', '', '', '', '', '', '', ''],  
+          ['', '', '', '', '', '', '', ''], 
+          ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],  
+          ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR']];
+
+    var deltaFrom2 = {row: 1, col: 5},
+      deltaTo2 = {row: 3, col: 5},
+      board2 = [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
+          ['BP', 'BP', '', 'BP', 'BP', '', 'BP', 'BP'], 
+          ['', '', '', '', '', '', '', ''],  
+          ['', '', 'BP', '', '', 'BP', 'WP', ''], 
+          ['', '', '', '', '', '', '', ''],  
+          ['', '', '', '', '', '', '', ''], 
+          ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],  
+          ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR']];
+
+    var deltaFrom3 = {row: 3, col: 6},
+      deltaTo3 = {row: 2, col: 5},
+      board3 = [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
+          ['BP', 'BP', '', 'BP', 'BP', '', 'BP', 'BP'], 
+          ['', '', '', '', '', 'WP', '', ''],  
+          ['', '', 'BP', '', '', '', '', ''], 
+          ['', '', '', '', '', '', '', ''],  
+          ['', '', '', '', '', '', '', ''], 
+          ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],  
+          ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR']];  // a wining board for black
+
+    var lastState = getStateParameters(board1, deltaFrom1, deltaTo1, initialIsUnderCheck,
+                  initialCanCastleKing, initialCanCastleQueen, initialEnpassantPosition);
+    var currentState = getStateParameters(board2, deltaFrom2, deltaTo2, initialIsUnderCheck,
+                  initialCanCastleKing, initialCanCastleQueen, {row: 3, col: 5});
+    var matchState2 = setMatchState2(1, lastState, currentState);
+    setMatchState(matchState2, 'passAndPlay');
+    expectBoard(board2);
+    clickDivsAndExpectPiece(deltaFrom3, deltaTo3, "WP"); // winning click!
+    expectBoard(board3);
   });
 
 });
