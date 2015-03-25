@@ -1,5 +1,5 @@
 exports.config = {
-  specs: ['src/end_to_end_tests.js'],
+  specs: ['src/end_to_end_tests.js','src/end_to_end_tests_ByRay.js'],
   allScriptsTimeout: 11000,
   directConnect: true, // only works with Chrome and Firefox
   capabilities: {
