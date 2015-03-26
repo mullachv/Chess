@@ -216,13 +216,14 @@
     }
 
     $scope.canSelect = function(row, col) {
-      if ($scope.rotate) {
-        row = 7 - row;
-        col = 7 - col;
-      }
-
-      var turn = $scope.turnIndex === 0 ? 'W' : 'B';
-      return $scope.board[row][col].charAt(0) === turn;
+      if ($scope.isYourTurn) {
+        if ($scope.rotate) {
+          row = 7 - row;
+          col = 7 - col;
+        }
+        var turn = $scope.turnIndex === 0 ? 'W' : 'B';
+        return $scope.board[row][col].charAt(0) === turn;
+      }     
     };
 
     $scope.isBlackPiece = function(row, col) {
