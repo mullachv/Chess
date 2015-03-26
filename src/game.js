@@ -137,10 +137,6 @@
     };
 
     function isValidToCell(turnIndex, row, col) {
-      if ($scope.rotate) {
-        row = 7 - row;
-        col = 7 - col;
-      }
       var opponent = turnIndex === 0 ? 'B' : 'W';
       return $scope.board[row][col] === '' || 
               $scope.board[row][col].charAt(0) === opponent;
