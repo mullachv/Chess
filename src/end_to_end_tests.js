@@ -207,10 +207,10 @@ describe('Chess', function() {
 
   
   it('should end game if there is a stalemate', function () {
-    var deltaFrom1 = {row: 1, col: 3},
-        deltaTo1 = {row: 1, col: 4},
+    var deltaFrom1 = {row: 1, col: 4},
+        deltaTo1 = {row: 1, col: 5},
         board1 = [['', '', '', '', '', '', '', ''], 
-          ['', '', '', '', 'WK', '', 'BK', ''], 
+          ['', '', '', '', '', 'WK', 'BK', ''], 
           ['', '', '', '', '', '', '', ''],  
           ['', '', '', '', '', '', '', ''], 
           ['', '', '', '', '', '', '', ''],  
@@ -221,7 +221,7 @@ describe('Chess', function() {
     var deltaFrom2 = {row: 1, col: 6},
         deltaTo2 = {row: 0, col: 7},
         board2 = [['', '', '', '', '', '', '', 'BK'], 
-          ['', '', '', '', 'WK', '', '', ''], 
+          ['', '', '', '', '', 'WK', '', ''], 
           ['', '', '', '', '', '', '', ''],  
           ['', '', '', '', '', '', '', ''], 
           ['', '', '', '', '', '', '', ''],  
@@ -241,42 +241,26 @@ describe('Chess', function() {
           ['', '', '', '', '', '', '', ''],  
           ['', '', '', '', '', '', '', '']];  // a wining board for black
 
-    var lastState = getStateParameters(board1, deltaFrom1, deltaTo1, [false, true],
+    var lastState = getStateParameters(board1, deltaFrom1, deltaTo1, initialIsUnderCheck,
                   initialCanCastleKing, initialCanCastleQueen, initialEnpassantPosition);
     var currentState = getStateParameters(board2, deltaFrom2, deltaTo2, initialIsUnderCheck,
                   initialCanCastleKing, initialCanCastleQueen, initialEnpassantPosition);
     var matchState2 = setMatchState2(1, lastState, currentState);
   
     setMatchState(matchState2, 'passAndPlay');
-    browser.pause();
     expectBoard(board2);
     clickDivsAndExpectPiece(deltaFrom3, deltaTo3, "WQ"); // click caused stalemate
     expectBoard(board_stalemate);
   });
+  
 
 it('should perform enpassant for moving WP from 3x5 to 2x4', function () {
     var deltaFrom1 = {row: 4, col: 6},
-      deltaTo1 = {row: 3, col: 6},
-      board1 = [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
-          ['BP', 'BP', '', 'BP', 'BP', 'BP', 'BP', 'BP'], 
-          ['', '', '', '', '', '', '', ''],  
-          ['', '', 'BP', '', '', '', 'WP', ''], 
-          ['', '', '', '', '', '', '', ''],  
-          ['', '', '', '', '', '', '', ''], 
-          ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],  
-          ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR']];
+      deltaTo1 = {row: 3, col: 6};      
 
     var deltaFrom2 = {row: 1, col: 5},
-      deltaTo2 = {row: 3, col: 5},
-      board2 = [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
-          ['BP', 'BP', '', 'BP', 'BP', '', 'BP', 'BP'], 
-          ['', '', '', '', '', '', '', ''],  
-          ['', '', 'BP', '', '', 'BP', 'WP', ''], 
-          ['', '', '', '', '', '', '', ''],  
-          ['', '', '', '', '', '', '', ''], 
-          ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],  
-          ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR']];
-
+      deltaTo2 = {row: 3, col: 5};
+      
     var deltaFrom3 = {row: 3, col: 6},
       deltaTo3 = {row: 2, col: 5},
       board3 = [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
@@ -285,17 +269,123 @@ it('should perform enpassant for moving WP from 3x5 to 2x4', function () {
           ['', '', 'BP', '', '', '', '', ''], 
           ['', '', '', '', '', '', '', ''],  
           ['', '', '', '', '', '', '', ''], 
-          ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP', 'WP'],  
+          ['WP', 'WP', 'WP', 'WP', 'WP', 'WP', '', 'WP'],  
           ['WR', 'WN', 'WB', 'WQ', 'WK', 'WB', 'WN', 'WR']];  // a wining board for black
+
+    clickDivsAndExpectPiece({row: 6, col: 6}, {row: 4, col: 6}, "WP");
+    clickDivsAndExpectPiece({row: 1, col: 2}, {row: 3, col: 2}, "BP");
+    clickDivsAndExpectPiece(deltaFrom1, deltaTo1, "WP");
+    clickDivsAndExpectPiece(deltaFrom2, deltaTo2, "BP");
+    clickDivsAndExpectPiece(deltaFrom3, deltaTo3, "WP"); // winning click!
+    expectBoard(board3);
+  });
+
+  it('should show WN in 5x2 if I move it from 7x1', function () {
+    var deltaFrom = {row: 7, col: 1};
+    var deltaTo = {row: 5, col: 2};
+
+    clickDivsAndExpectPiece(deltaFrom, deltaTo, "WN");
+    var board = JSON.parse(JSON.stringify(initialBoard));
+    board[5][2] = board[7][1];
+    board[7][1] = '';
+    expectBoard(board);
+  });
+
+  it('should ignore clicking on a empty cell', function () {
+    // clicking on a non-empty cell doesn't do anything.
+    clickDivsAndExpectPiece({row: 3, col: 0}, {row: 4, col: 0}, "");
+    expectBoard(initialBoard);
+  });
+
+  it('WK in 7x4 can perform castling to king side if move to 7x6', function () {
+    var deltaFrom1 = {row: 7, col: 5},
+        deltaTo1 = {row: 5, col: 7},
+        board1 = [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
+          ['', 'BP', 'BP', 'BP', 'BP', '', 'BP', 'BP'], 
+          ['', '', '', '', '', 'WP', '', ''],  
+          ['BP', '', '', 'WP', 'WN', 'BP', '', 'BP'], 
+          ['', '', '', '', '', '', 'WP', ''],  
+          ['', '', '', '', '', '', '', 'WB'], 
+          ['WP', 'WP', 'WP', '', 'WP', 'WP', '', 'WP'],  
+          ['WR', 'WN', 'WB', 'WQ', 'WK', '', '', 'WR']];
+
+    var deltaFrom2 = {row: 3, col: 7},
+        deltaTo2 = {row: 4, col: 7},
+        board2 = [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
+          ['', 'BP', 'BP', 'BP', 'BP', '', 'BP', 'BP'], 
+          ['', '', '', '', '', 'WP', '', ''],  
+          ['BP', '', '', 'WP', 'WN', 'BP', '', ''], 
+          ['', '', '', '', '', '', 'WP', 'BP'],  
+          ['', '', '', '', '', '', '', 'WB'], 
+          ['WP', 'WP', 'WP', '', 'WP', 'WP', '', 'WP'],  
+          ['WR', 'WN', 'WB', 'WQ', 'WK', '', '', 'WR']];
+
+    var deltaFrom3 = {row: 7, col: 4},
+        deltaTo3 = {row: 7, col: 6},
+        board3 = [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
+          ['', 'BP', 'BP', 'BP', 'BP', '', 'BP', 'BP'], 
+          ['', '', '', '', '', 'WP', '', ''],  
+          ['BP', '', '', 'WP', 'WN', 'BP', '', ''], 
+          ['', '', '', '', '', '', 'WP', 'BP'],  
+          ['', '', '', '', '', '', '', 'WB'], 
+          ['WP', 'WP', 'WP', '', 'WP', 'WP', '', 'WP'],  
+          ['WR', 'WN', 'WB', 'WQ', '', 'WR', 'WK', '']];
 
     var lastState = getStateParameters(board1, deltaFrom1, deltaTo1, initialIsUnderCheck,
                   initialCanCastleKing, initialCanCastleQueen, initialEnpassantPosition);
     var currentState = getStateParameters(board2, deltaFrom2, deltaTo2, initialIsUnderCheck,
-                  initialCanCastleKing, initialCanCastleQueen, {row: 3, col: 5});
+                  initialCanCastleKing, initialCanCastleQueen, initialEnpassantPosition);
     var matchState2 = setMatchState2(1, lastState, currentState);
+  
     setMatchState(matchState2, 'passAndPlay');
     expectBoard(board2);
-    clickDivsAndExpectPiece(deltaFrom3, deltaTo3, "WP"); // winning click!
+    clickDivsAndExpectPiece(deltaFrom3, deltaTo3, "WK"); // click caused stalemate
+    expectBoard(board3);
+  });
+
+  it('WK in 7x4 cannot perform castling to king side because 7x6 is under attack', function () {
+    var deltaFrom1 = {row: 4, col: 5},
+        deltaTo1 = {row: 2, col: 4},
+        board1 = [['BR', 'BN', '', '', 'BK', 'BB', 'BN', 'BR'], 
+          ['BP', 'BP', 'BP', '', 'BP', 'BP', 'BP', 'BP'], 
+          ['', '', '', '', 'WN', '', '', ''],  
+          ['', '', '', '', '', '', 'WP', ''], 
+          ['', '', '', 'BP', '', '', '', ''],  
+          ['', '', '', '', '', 'BQ', '', 'WB'], 
+          ['WP', 'WP', 'WP', 'BP', 'WP', 'WP', '', 'WP'],  
+          ['WR', 'WN', 'WB', 'WQ', 'WK', '', '', 'WR']];
+
+    var deltaFrom2 = {row: 5, col: 5},
+        deltaTo2 = {row: 5, col: 6},
+        board2 = [['BR', 'BN', '', '', 'BK', 'BB', 'BN', 'BR'], 
+          ['BP', 'BP', 'BP', '', 'BP', 'BP', 'BP', 'BP'], 
+          ['', '', '', '', 'WN', '', '', ''],  
+          ['', '', '', '', '', '', 'WP', ''], 
+          ['', '', '', 'BP', '', '', '', ''],  
+          ['', '', '', '', '', '', 'BQ', 'WB'], 
+          ['WP', 'WP', 'WP', 'BP', 'WP', 'WP', '', 'WP'],  
+          ['WR', 'WN', 'WB', 'WQ', 'WK', '', '', 'WR']];
+
+    var deltaFrom3 = {row: 7, col: 4},
+        deltaTo3 = {row: 7, col: 6},
+        board3 = [['BR', 'BN', '', '', 'BK', 'BB', 'BN', 'BR'], 
+          ['BP', 'BP', 'BP', '', 'BP', 'BP', 'BP', 'BP'], 
+          ['', '', '', '', 'WN', '', '', ''],  
+          ['', '', '', '', '', '', 'WP', ''], 
+          ['', '', '', 'BP', '', '', '', ''],  
+          ['', '', '', '', '', '', 'BQ', 'WB'], 
+          ['WP', 'WP', 'WP', 'BP', 'WP', 'WP', '', 'WP'],  
+          ['WR', 'WN', 'WB', 'WQ', 'WK', '', '', 'WR']];
+
+    var lastState = getStateParameters(board1, deltaFrom1, deltaTo1, initialIsUnderCheck,
+                  initialCanCastleKing, initialCanCastleQueen, initialEnpassantPosition);
+    var currentState = getStateParameters(board2, deltaFrom2, deltaTo2, [true, false],
+                  initialCanCastleKing, initialCanCastleQueen, initialEnpassantPosition);
+    var matchState2 = setMatchState2(1, lastState, currentState);
+  
+    setMatchState(matchState2, 'passAndPlay');
+    expectBoard(board2);
+    clickDivsAndExpectPiece(deltaFrom3, deltaTo3, ""); // click caused stalemate
     expectBoard(board3);
   });
 
