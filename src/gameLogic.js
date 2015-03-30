@@ -903,6 +903,7 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
    */
   function getPossibleMoves(board, turnIndex, isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition) {
     // the list of possible moves of deltaFrom and deltaTo
+    if (!board) { return []; }
     var possibleMoves = [],
         turn = (turnIndex === 0 ? 'W' : 'B');
     for (var i = 0; i <= 7; i++) {

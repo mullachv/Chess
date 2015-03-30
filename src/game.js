@@ -216,15 +216,37 @@
     }
 
     $scope.canSelect = function(row, col) {
+      if (!$scope.board) { return true; }
       if ($scope.isYourTurn) {
         if ($scope.rotate) {
           row = 7 - row;
           col = 7 - col;
         }
         var turn = $scope.turnIndex === 0 ? 'W' : 'B';
-        return $scope.board[row][col].charAt(0) === turn;
+        if ($scope.board[row][col].charAt(0) === turn) {
+          if (!$scope.isUnderCheck) { $scope.isUnderCheck = [false, false]; }
+          if (!$scope.canCastleKing) { $scope.canCastleKing = [true, true]; }
+          if (!$scope.canCastleQueen) { $scope.canCastleQueen = [true, true]; }
+          if (!$scope.enpassantPosition) { $scope.enpassantPosition = {row: null, col: null}; }
+          var possibleMoves = gameLogic.getPossibleMoves($scope.board, $scope.turnIndex, 
+                      $scope.isUnderCheck, $scope.canCastleKing,
+                      $scope.canCastleQueen, $scope.enpassantPosition);
+          return cellInPossibleMoves(row, col, possibleMoves);
+        } else {
+          return false;
+        }
       }     
     };
+
+    function cellInPossibleMoves(row, col, possibleMoves) {
+      var cell = {row: row, col: col};  
+      for (var i = 0; i < possibleMoves.length; i++) {
+        if (angular.equals(cell, possibleMoves[i][0])) {
+          return true;
+        }
+      }  
+      return false;     
+    }
 
     $scope.isBlackPiece = function(row, col) {
       if ($scope.rotate) {
