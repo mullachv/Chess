@@ -44,6 +44,14 @@ img.isWhitePiece.canSelect {
   -webkit-animation: white-blink 2s infinite;
 }
 
+svg .lightSquare {
+  fill: rgb(255, 204, 0);
+}
+
+svg .darkSquare {
+  fill: rgb(230, 138, 0);
+}
+
 /*img.canSelect {
   -webkit-animation-name: orangellowPulse;
   -webkit-animation-duration: 3s;
