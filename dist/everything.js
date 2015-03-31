@@ -969,16 +969,22 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
   'use strict';
   angular.module('myApp')
   .controller('ChessCtrl',
-      ['$scope', '$log', '$timeout',
+      ['$scope', '$rootScope','$log', '$timeout',
        'gameService', 'stateService', 'gameLogic', 
        'resizeGameAreaService', '$translate',
-      function ($scope, $log, $timeout,
+      function ($scope, $rootScope, $log, $timeout,
         gameService, stateService, gameLogic, 
         resizeGameAreaService, $translate) {
 
     resizeGameAreaService.setWidthToHeight(1);
 
     var selectedCells = [];       // record the clicked cells
+    var gameArea = document.getElementById("gameArea");
+    var rowsNum = 8;
+    var colsNum = 8;
+    var draggingStartedRowCol = null; // The {row: YY, col: XX} where dragging started.
+    var draggingPiece = null;
+    var nextZIndex = 61;
 
     function sendComputerMove() {
       var possibleMoves = gameLogic.getPossibleMoves($scope.board, $scope.turnIndex, 
@@ -1051,8 +1057,118 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
       selectedCells = [];    
     }
     window.e2e_test_stateService = stateService;
+    window.handleDragEvent = handleDragEvent;
 
-    $scope.cellClicked = function (row, col) {
+    function handleDragEvent(type, clientX, clientY) {
+      // Center point in gameArea
+      var x = clientX - gameArea.offsetLeft;
+      var y = clientY - gameArea.offsetTop;
+      var row, col;
+      // Is outside gameArea?
+      if (x < 0 || y < 0 || x >= gameArea.clientWidth || y >= gameArea.clientHeight) {
+        if (draggingPiece) {
+          // Drag the piece where the touch is (without snapping to a square).
+          var size = getSquareWidthHeight();
+          setDraggingPieceTopLeft({top: y - size.height / 2, left: x - size.width / 2});
+        } else {
+          return;
+        }
+      } else {
+        // Inside gameArea. Let's find the containing square's row and col
+        var col = Math.floor(colsNum * x / gameArea.clientWidth);
+        var row = Math.floor(rowsNum * y / gameArea.clientHeight);
+        if (type === "touchstart" && !draggingStartedRowCol) {
+          // drag started
+          if ($scope.board[row][col]) {            
+            draggingStartedRowCol = {row: row, col: col};
+            draggingPiece = document.getElementById("MyPiece" + draggingStartedRowCol.row + "x" + draggingStartedRowCol.col);
+            draggingPiece.style['z-index'] = ++nextZIndex;
+          }
+        }
+        if (!draggingPiece) {
+          return;
+        }
+        if (type === "touchend") {
+          var from = draggingStartedRowCol;
+          var to = {row: row, col: col};
+          dragDone(from, to);
+        } else {
+          // Drag continue
+          setDraggingPieceTopLeft(getSquareTopLeft(row, col));
+          var centerXY = getSquareCenterXY(row, col);
+        }
+      }
+      if (type === "touchend" || type === "touchcancel" || type === "touchleave") {
+        // drag ended
+        // return the piece to it's original style (then angular will take care to hide it).
+        setDraggingPieceTopLeft(getSquareTopLeft(draggingStartedRowCol.row, draggingStartedRowCol.col));    
+        draggingStartedRowCol = null;
+        draggingPiece = null;
+      }
+    }
+
+    function setDraggingPieceTopLeft(topLeft) {
+      var originalSize = getSquareTopLeft(draggingStartedRowCol.row, draggingStartedRowCol.col);
+      draggingPiece.style.left = (topLeft.left - originalSize.left) + "px";
+      draggingPiece.style.top = (topLeft.top - originalSize.top) + "px";
+    }
+
+    function getSquareWidthHeight() {
+      return {
+        width: gameArea.clientWidth / colsNum,
+        height: gameArea.clientHeight / rowsNum
+      };
+    }
+
+    function getSquareTopLeft(row, col) {
+      var size = getSquareWidthHeight();
+      return {top: row * size.height, left: col * size.width}
+    }
+
+    function getSquareCenterXY(row, col) {
+      var size = getSquareWidthHeight();
+      return {
+        x: col * size.width + size.width / 2,
+        y: row * size.height + size.height / 2
+      };
+    }
+
+    function dragDone(from, to) {
+      $rootScope.$apply(function () {
+        var msg = "Dragged piece " + from.row + "x" + from.col + " to square " + to.row + "x" + to.col;
+        $log.info(msg);
+        // Update piece in board and make the move
+        if (window.location.search === '?throwException') {
+          throw new Error("Throwing the error because URL has '?throwException'");
+        }
+        if (!$scope.isYourTurn) {
+          return;
+        }
+        // need to rotate the angle if playblack
+        if($scope.rotate) {
+          from.row = 7 - from.row;
+          from.col = 7 - from.col;
+          to.row = 7 - to.row;
+          to.col = 7 - to.col;
+        }
+
+        try {
+          $scope.deltaFrom = from;
+          $scope.deltaTo = to;
+
+          var move = gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
+            $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
+            $scope.canCastleQueen, $scope.enpassantPosition);
+          $scope.isYourTurn = false; // to prevent making another move
+          gameService.makeMove(move);
+        } catch (e) {
+          $log.info(["Exception throwned when create move in position:", from, to]);
+          return;
+        }
+      });
+    }
+
+/*    $scope.cellClicked = function (row, col) {
       $log.info(["Clicked on cell:", row, col]);
 
       // to test encoding a stack trace with sourcemap
@@ -1083,12 +1199,6 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
           $scope.deltaFrom = selectedCells[0];
           $scope.deltaTo = selectedCells[1];
 
-// console.log("game.js CreateMove arguments: " + angular.toJson([
-// $scope.board, $scope.deltaFrom, $scope.deltaTo, 
-//             $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
-//             $scope.canCastleQueen, $scope.enpassantPosition
-// ]));
-
           var move = gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
             $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
             $scope.canCastleQueen, $scope.enpassantPosition);
@@ -1101,7 +1211,7 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
           selectedCells = [];
         }
       }
-    };
+    }; */
 
     function isValidToCell(turnIndex, row, col) {
       var opponent = turnIndex === 0 ? 'B' : 'W';
@@ -1114,11 +1224,10 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
         row = 7 - row;
         col = 7 - col;
       }
-
       var turn = $scope.turnIndex === 0 ? 'W' : 'B';
 
-      return selectedCells[0] && selectedCells[0].row === row && 
-              selectedCells[0].col === col && $scope.board[row][col].charAt(0) === turn;
+      return draggingStartedRowCol && draggingStartedRowCol.row === row && 
+              draggingStartedRowCol.col === col && $scope.board[row][col].charAt(0) === turn;
     };
 
     $scope.shouldShowImage = function (row, col) {
@@ -1168,8 +1277,16 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
     };
 
     $scope.getBackgroundSrc = function(row, col) {
-      if (isLight(row, col)) { return 'imgs/Chess-lightCell.png'; }
-      else { return 'imgs/Chess-darkCell.png'; }
+      if (isLight(row, col)) { return 'imgs/Chess-lightCell.svg'; }
+      else { return 'imgs/Chess-darkCell.svg'; }
+    };
+
+    $scope.getSquareClass = function(row, col) {
+      var isLightSquare = isLight(row, col);
+      return {
+        lightSquare: isLightSquare,
+        darkSquare: !isLightSquare
+      };
     };
 
     function isLight(row, col) {
@@ -1231,6 +1348,19 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
       return $scope.board[row][col].charAt(0) === 'W';
     };
 
+    function getIntegersTill(number) {
+        var res = [];
+        for (var i = 0; i < number; i++) {
+          res.push(i);
+        }
+        return res;
+    }
+
+    $scope.rows = getIntegersTill(rowsNum);
+    $scope.cols = getIntegersTill(colsNum);
+    $scope.rowsNum = rowsNum;
+    $scope.colsNum = colsNum;
+
     gameService.setGame({
       gameDeveloperEmail: "xzzhuchen@gmail.com",
       minNumberOfPlayers: 2,
@@ -1239,6 +1369,5 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
       updateUI: updateUI
     });
   }]);
-
 
 })();

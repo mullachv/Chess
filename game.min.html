@@ -13,6 +13,9 @@
 
   <script src="http://yoav-zibin.github.io/emulator/dist/gameServices.min.js"></script>
 
+  <!--Enable the drag and drop in mobile device-->
+  <script src="http://yoav-zibin.github.io/emulator/examples/drag_n_drop/dragAndDropListeners.js"></script>
+
   <script src="languages/en.js"></script>
   <script src="http://yoav-zibin.github.io/emulator/angular-translate/angular-translate.2.6.1.min.js"></script>
 
@@ -32,16 +35,22 @@
 
 <div id="gameArea">
   <section id="board">
-    <div ng-repeat="row in [0, 1, 2, 3, 4, 5, 6, 7]"
-        style="position:absolute; top:{{row * 12.5}}%; left:0; width:100%; height:12.5%;">
-      <div ng-repeat="col in [0, 1, 2, 3, 4, 5, 6, 7]" class="square"
-          style="position:absolute; top:0; left:{{col * 12.5}}%; width:12.5%; height:100%;"
-          ng-class="{l: col === 0, rb: row >= 0, t: row === 0}"
+    <div ng-repeat="row in rows"
+        style="position:absolute; top:{{row * 100 / rowsNum}}%; left:0; width:100%; height:{{100 / rowsNum}}%;">
+      <div ng-repeat="col in cols" class="square"
+          style="position:absolute; top:0; left:{{col * 100 / colsNum}}%; width:{{100 / colsNum}}%; height:100%;"
+          ng-class=""
           ng-click="cellClicked(row, col)"
           id="{{'e2e_test_div_' + row + 'x' + col}}">
+        <svg width="100%" height="100%"
+          style="position:absolute;"
+          ng-show="true">
           <!-- background image -->
-          <img ng-src="{{getBackgroundSrc(row, col)}}" classs="background_image" width="100%" height="100%">
-          <div class="img-wrap">
+          <img ng-src="{{getBackgroundSrc(row, col)}}" classs="background_image" width="100%" height="100%" style="z-index: -1;">
+          <!-- <rect width="100%" height="100%" ng-class="getSquareClass(row, col)" /> -->
+          <circle cx="50%" cy="50%" r="10%"
+            stroke="blue" stroke-width="2" fill="yellow" style="z-index: 60;"/>
+          <div class="img-wrap" id="MyPiece{{row}}x{{col}}">
             <!--The image of the piece get wrapped upon background img-->
             <img ng-class="{piece: true,
                             selectedPiece: isSelected(row, col),
@@ -52,6 +61,7 @@
               ng-src="{{getImageSrc(row, col)}}"
               id="{{'e2e_test_img_' + getPieceKindInId(row, col) + '_' + row + 'x' + col}}">
           </div>
+        </svg>
       </div>
     </div>
   </section>
