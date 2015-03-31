@@ -984,6 +984,7 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
     var colsNum = 8;
     var draggingStartedRowCol = null; // The {row: YY, col: XX} where dragging started.
     var draggingPiece = null;
+    var draggingPieceAvailableMoves = null;
     var nextZIndex = 61;
 
     function sendComputerMove() {
@@ -1090,6 +1091,11 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
             draggingPiece.style['top'] = '10%';
             draggingPiece.style['left'] = '10%';
             draggingPiece.style['position'] = 'absolute';
+
+            draggingPieceAvailableMoves = getDraggingPieceAvailableMoves(row, col);
+            for (var i = 0; i < draggingPieceAvailableMoves.length; i++) {
+              draggingPieceAvailableMoves[i].style['display'] = 'inline';
+            }
           }
         }
         if (!draggingPiece) {
@@ -1114,8 +1120,12 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
         draggingPiece.style['top'] = '20%';
         draggingPiece.style['left'] = '20%';
         draggingPiece.style['position'] = 'absolute';
+        for (var i = 0; i < draggingPieceAvailableMoves.length; i++) {
+              draggingPieceAvailableMoves[i].style['display'] = 'none';
+        }
         draggingStartedRowCol = null;
         draggingPiece = null;
+        draggingPieceAvailableMoves = null;
       }
     }
 
@@ -1178,6 +1188,24 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
           return;
         }
       });
+    }
+
+    function getDraggingPieceAvailableMoves(row, col) {
+      var possibleMoves = gameLogic.getPossibleMoves($scope.board, $scope.turnIndex, 
+                      $scope.isUnderCheck, $scope.canCastleKing,
+                      $scope.canCastleQueen, $scope.enpassantPosition);
+      var draggingPieceAvailableMoves = [];
+      var index = cellInPossibleMoves(row, col, possibleMoves);
+      if (index !== false) {
+        var availableMoves = possibleMoves[index][1];
+        for (var i = 0; i < availableMoves.length; i++) {
+          var availablePos = availableMoves[i];
+          draggingPieceAvailableMoves.push(document.getElementById("MyMarker" + 
+            availablePos.row + "x" + availablePos.col));
+        }
+      }
+
+      return draggingPieceAvailableMoves;
     }
 
 /*    $scope.cellClicked = function (row, col) {
@@ -1293,12 +1321,9 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
       else { return 'imgs/Chess-darkCell.svg'; }
     };
 
-    $scope.getSquareClass = function(row, col) {
+    $scope.getBackgroundFill = function(row, col) {
       var isLightSquare = isLight(row, col);
-      return {
-        lightSquare: isLightSquare,
-        darkSquare: !isLightSquare
-      };
+      return isLightSquare ? 'rgb(243, 243, 255)' : 'rgb(208, 208, 230)';
     };
 
     function isLight(row, col) {
@@ -1327,7 +1352,7 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
           var possibleMoves = gameLogic.getPossibleMoves($scope.board, $scope.turnIndex, 
                       $scope.isUnderCheck, $scope.canCastleKing,
                       $scope.canCastleQueen, $scope.enpassantPosition);
-          return cellInPossibleMoves(row, col, possibleMoves);
+          return cellInPossibleMoves(row, col, possibleMoves) !== false;
         } else {
           return false;
         }
@@ -1338,7 +1363,7 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
       var cell = {row: row, col: col};  
       for (var i = 0; i < possibleMoves.length; i++) {
         if (angular.equals(cell, possibleMoves[i][0])) {
-          return true;
+          return i;
         }
       }  
       return false;     
