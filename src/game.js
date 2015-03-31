@@ -114,8 +114,15 @@
           // drag started
           if ($scope.board[row][col]) {            
             draggingStartedRowCol = {row: row, col: col};
-            draggingPiece = document.getElementById("MyPiece" + draggingStartedRowCol.row + "x" + draggingStartedRowCol.col);
+            draggingPiece = document.getElementById("e2e_test_img_" + 
+              $scope.getPieceKindInId(row, col) + '_' + 
+              draggingStartedRowCol.row + "x" + draggingStartedRowCol.col);
             draggingPiece.style['z-index'] = ++nextZIndex;
+            draggingPiece.style['width'] = '80%';
+            draggingPiece.style['height'] = '80%';
+            draggingPiece.style['top'] = '10%';
+            draggingPiece.style['left'] = '10%';
+            draggingPiece.style['position'] = 'absolute';
           }
         }
         if (!draggingPiece) {
@@ -135,6 +142,11 @@
         // drag ended
         // return the piece to it's original style (then angular will take care to hide it).
         setDraggingPieceTopLeft(getSquareTopLeft(draggingStartedRowCol.row, draggingStartedRowCol.col));    
+        draggingPiece.style['width'] = '60%';
+        draggingPiece.style['height'] = '60%';
+        draggingPiece.style['top'] = '20%';
+        draggingPiece.style['left'] = '20%';
+        draggingPiece.style['position'] = 'absolute';
         draggingStartedRowCol = null;
         draggingPiece = null;
       }
