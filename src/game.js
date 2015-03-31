@@ -127,7 +127,10 @@
 
             draggingPieceAvailableMoves = getDraggingPieceAvailableMoves(row, col);
             for (var i = 0; i < draggingPieceAvailableMoves.length; i++) {
-              draggingPieceAvailableMoves[i].style['display'] = 'inline';
+              draggingPieceAvailableMoves[i].style['stroke-width'] = '1';
+              draggingPieceAvailableMoves[i].style['stroke'] = 'purple';
+              draggingPieceAvailableMoves[i].setAttribute("rx", "10");
+              draggingPieceAvailableMoves[i].setAttribute("ry", "10");
             }
           }
         }
@@ -154,7 +157,10 @@
         draggingPiece.style['left'] = '20%';
         draggingPiece.style['position'] = 'absolute';
         for (var i = 0; i < draggingPieceAvailableMoves.length; i++) {
-              draggingPieceAvailableMoves[i].style['display'] = 'none';
+              draggingPieceAvailableMoves[i].style['stroke-width'] = '';
+              draggingPieceAvailableMoves[i].style['stroke'] = '';
+              draggingPieceAvailableMoves[i].setAttribute("rx", "");
+              draggingPieceAvailableMoves[i].setAttribute("ry", "");
         }
         draggingStartedRowCol = null;
         draggingPiece = null;
@@ -233,7 +239,7 @@
         var availableMoves = possibleMoves[index][1];
         for (var i = 0; i < availableMoves.length; i++) {
           var availablePos = availableMoves[i];
-          draggingPieceAvailableMoves.push(document.getElementById("MyMarker" + 
+          draggingPieceAvailableMoves.push(document.getElementById("MyBackground" + 
             availablePos.row + "x" + availablePos.col));
         }
       }
