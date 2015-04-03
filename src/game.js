@@ -36,7 +36,13 @@
             $scope.canCastleQueen, $scope.enpassantPosition));
       } else {
         $log.info("no there are no possible moves!");
-      }   
+      }
+
+      // gameService.makeMove(
+      //     aiService.createComputerMove(state.board, turnIndex,
+      //       // at most 1 second for the AI to choose a move (but might be much quicker)
+      //       {millisecondsLimit: 1000}));
+
     }
 
     /**
@@ -111,6 +117,13 @@
         // Inside gameArea. Let's find the containing square's row and col
         var col = Math.floor(colsNum * x / gameArea.clientWidth);
         var row = Math.floor(rowsNum * y / gameArea.clientHeight);
+
+        // rotate the board when dragging
+        if ($scope.rotate) {
+          row = 7 - row;
+          col = 7 - col;
+        }
+
         if (type === "touchstart" && !draggingStartedRowCol) {
           // drag started
           if ($scope.board[row][col]) {            
