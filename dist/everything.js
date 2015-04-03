@@ -1085,12 +1085,6 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
         var col = Math.floor(colsNum * x / gameArea.clientWidth);
         var row = Math.floor(rowsNum * y / gameArea.clientHeight);
 
-        // rotate the board when dragging
-        if ($scope.rotate) {
-          row = 7 - row;
-          col = 7 - col;
-        }
-
         if (type === "touchstart" && !draggingStartedRowCol) {
           // drag started
           if ($scope.board[row][col]) {            
