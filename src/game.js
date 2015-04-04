@@ -117,10 +117,17 @@
         // Inside gameArea. Let's find the containing square's row and col
         var col = Math.floor(colsNum * x / gameArea.clientWidth);
         var row = Math.floor(rowsNum * y / gameArea.clientHeight);
+        var r_row = row;
+        var r_col = col;
+
+        if ($scope.rotate) {
+          r_row = 7 - r_row;
+          r_col = 7 - r_col;
+        }
 
         if (type === "touchstart" && !draggingStartedRowCol) {
           // drag started
-          if ($scope.board[row][col]) {            
+          if ($scope.board[r_row][r_col]) {            
             draggingStartedRowCol = {row: row, col: col};
             draggingPiece = document.getElementById("e2e_test_img_" + 
               $scope.getPieceKindInId(row, col) + '_' + 
@@ -132,7 +139,7 @@
             draggingPiece.style['left'] = '10%';
             draggingPiece.style['position'] = 'absolute';
 
-            draggingPieceAvailableMoves = getDraggingPieceAvailableMoves(row, col);
+            draggingPieceAvailableMoves = getDraggingPieceAvailableMoves(r_row, r_col);
             for (var i = 0; i < draggingPieceAvailableMoves.length; i++) {
               draggingPieceAvailableMoves[i].style['stroke-width'] = '1';
               draggingPieceAvailableMoves[i].style['stroke'] = 'purple';
@@ -246,6 +253,10 @@
         var availableMoves = possibleMoves[index][1];
         for (var i = 0; i < availableMoves.length; i++) {
           var availablePos = availableMoves[i];
+          if($scope.rotate) {
+            availablePos.row = 7 - availablePos.row;
+            availablePos.col = 7 - availablePos.col;
+          }
           draggingPieceAvailableMoves.push(document.getElementById("MyBackground" + 
             availablePos.row + "x" + availablePos.col));
         }
