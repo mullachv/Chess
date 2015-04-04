@@ -320,10 +320,10 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
             deltaFrom.col !== deltaTo.col &&
             (Math.abs(deltaFrom.col - enpassantPosition.col) === 1)) {
             boardAfterMove[enpassantPosition.row][enpassantPosition.col] = '';
-            enpassantPositionAfterMove.row = null;
-            enpassantPositionAfterMove.col = null;
           }
           boardAfterMove[deltaFrom.row][deltaFrom.col] = '';
+          enpassantPositionAfterMove.row = null;
+          enpassantPositionAfterMove.col = null;
 
           // check for enpassant
           if (turn === "W" && deltaTo.row === 4) {
@@ -783,7 +783,9 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
     } else if (Math.abs(fromRow - toRow) === 1 && Math.abs(fromCol - toCol) === 1 &&
       (endPiece.charAt(0) === opponent || 
         endPiece === '' && enpassantPosition && 
-        enpassantPosition.row && enpassantPosition.col)) {
+        enpassantPosition.row && enpassantPosition.col &&
+        fromRow === enpassantPosition.row && 
+        Math.abs(fromCol - enpassantPosition.col) === 1)) {
       return moveAndCheck(board, turnIndex, deltaFrom, deltaTo);
     } else {
       return false;
