@@ -1,14 +1,15 @@
 (function(){
-  'use strict';
+  
   angular.module('myApp')
   .controller('ChessCtrl',
       ['$scope', '$rootScope','$log', '$timeout',
        'gameService', 'stateService', 'gameLogic', 
-       'resizeGameAreaService', '$translate',
+       'aiService', 'resizeGameAreaService', '$translate',
       function ($scope, $rootScope, $log, $timeout,
         gameService, stateService, gameLogic, 
-        resizeGameAreaService, $translate) {
+        aiService, resizeGameAreaService, $translate) {
 
+    'use strict';
     resizeGameAreaService.setWidthToHeight(1);
 
     var selectedCells = [];       // record the clicked cells
@@ -21,27 +22,34 @@
     var nextZIndex = 61;
 
     function sendComputerMove() {
-      var possibleMoves = gameLogic.getPossibleMoves($scope.board, $scope.turnIndex, 
-            $scope.isUnderCheck, $scope.canCastleKing,
-            $scope.canCastleQueen, $scope.enpassantPosition);
-      if (possibleMoves.length) {
-        var index1 = Math.floor(Math.random() * possibleMoves.length);
-        var pm = possibleMoves[index1];
-        var index2 = Math.floor(Math.random() * pm[1].length);
-        $scope.deltaFrom = pm[0];
-        $scope.deltaTo = pm[1][index2];
+      // var possibleMoves = gameLogic.getPossibleMoves($scope.board, $scope.turnIndex, 
+      //       $scope.isUnderCheck, $scope.canCastleKing,
+      //       $scope.canCastleQueen, $scope.enpassantPosition);
+      // if (possibleMoves.length) {
+      //   var index1 = Math.floor(Math.random() * possibleMoves.length);
+      //   var pm = possibleMoves[index1];
+      //   var index2 = Math.floor(Math.random() * pm[1].length);
+      //   $scope.deltaFrom = pm[0];
+      //   $scope.deltaTo = pm[1][index2];
 
-        gameService.makeMove(gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
-            $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
-            $scope.canCastleQueen, $scope.enpassantPosition));
-      } else {
-        $log.info("no there are no possible moves!");
+      //   gameService.makeMove(gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
+      //       $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
+      //       $scope.canCastleQueen, $scope.enpassantPosition));
+      // } else {
+      //   $log.info("no there are no possible moves!");
+      // }
+      var startingState = {
+        board: $scope.board,
+        isUnderCheck: $scope.isUnderCheck,
+        canCastleKing: $scope.canCastleKing,
+        canCastleQueen: $scope.canCastleQueen,
+        enpassantPosition: $scope.enpassantPosition
       }
 
-      // gameService.makeMove(
-      //     aiService.createComputerMove(state.board, turnIndex,
-      //       // at most 1 second for the AI to choose a move (but might be much quicker)
-      //       {millisecondsLimit: 1000}));
+      gameService.makeMove(
+          aiService.createComputerMove(startingState, $scope.turnIndex,
+            // at most 1 second for the AI to choose a move (but might be much quicker)
+            {millisecondsLimit: 1000}));
 
     }
 
