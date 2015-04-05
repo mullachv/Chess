@@ -51,9 +51,10 @@ angular.module('myApp').factory('aiService',
       var deltaFromAndTos = possibleDeltas[i];
       var deltaFrom = deltaFromAndTos[0],
           deltaTos = deltaFromAndTos[1];
-      for (var j = 0; j < deltaTos.length; i++) {
+      for (var j = 0; j < deltaTos.length; j++) {
         var deltaTo = deltaTos[j];
         try {
+          console.log("going to create move: " + JSON.stringify(deltaTo));
           possibleMoves.push(gameLogic.createMove(board, deltaFrom, deltaTo, playerIndex,
             isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition));
         } catch (e) {

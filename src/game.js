@@ -49,7 +49,7 @@
       gameService.makeMove(
           aiService.createComputerMove(startingState, $scope.turnIndex,
             // at most 1 second for the AI to choose a move (but might be much quicker)
-            {millisecondsLimit: 1000}));
+            {millisecondsLimit: 2000}));
 
     }
 
