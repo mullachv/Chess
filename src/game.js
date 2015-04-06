@@ -133,12 +133,14 @@
             draggingPiece = document.getElementById("e2e_test_img_" + 
               $scope.getPieceKindInId(row, col) + '_' + 
               draggingStartedRowCol.row + "x" + draggingStartedRowCol.col);
-            draggingPiece.style['z-index'] = ++nextZIndex;
-            draggingPiece.style['width'] = '80%';
-            draggingPiece.style['height'] = '80%';
-            draggingPiece.style['top'] = '10%';
-            draggingPiece.style['left'] = '10%';
-            draggingPiece.style['position'] = 'absolute';
+            if (draggingPiece) {
+              draggingPiece.style['z-index'] = ++nextZIndex;
+              draggingPiece.style['width'] = '80%';
+              draggingPiece.style['height'] = '80%';
+              draggingPiece.style['top'] = '10%';
+              draggingPiece.style['left'] = '10%';
+              draggingPiece.style['position'] = 'absolute';
+            }
 
             draggingPieceAvailableMoves = getDraggingPieceAvailableMoves(r_row, r_col);
             for (var i = 0; i < draggingPieceAvailableMoves.length; i++) {
@@ -228,23 +230,25 @@
           to.col = 7 - to.col;
         }
 
-        try {
-          $scope.deltaFrom = from;
-          $scope.deltaTo = to;
-
-          if (shouldPromote($scope.board, $scope.deltaFrom, $scope.deltaTo, $scope.turnIndex)) {
-            isPromotionModalShowing[modalName] = true;
-          }
-          var move = gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
-            $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
-            $scope.canCastleQueen, $scope.enpassantPosition, $scope.promoteTo);
-          $scope.isYourTurn = false; // to prevent making another move
-          gameService.makeMove(move);
-        } catch (e) {
-          $log.info(["Exception throwned when create move in position:", from, to]);
-          return;
+        if (shouldPromote($scope.board, from, to, $scope.turnIndex)) {
+          $scope.player = ($scope.turnIndex === 0 ? 'W' : 'B');
+          isPromotionModalShowing[modalName] = true;
         }
       });
+
+      try {
+        $scope.deltaFrom = from;
+        $scope.deltaTo = to;
+
+        var move = gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
+          $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
+          $scope.canCastleQueen, $scope.enpassantPosition, $scope.promoteTo);
+        $scope.isYourTurn = false; // to prevent making another move
+        gameService.makeMove(move);
+      } catch (e) {
+        $log.info(["Exception throwned when create move in position:", from, to]);
+        return;
+      }
     }
 
     function getDraggingPieceAvailableMoves(row, col) {
@@ -373,8 +377,7 @@
           col = 7 - col;
         }
         return $scope.board[row][col];
-      }
-      
+      }    
     };
 
     $scope.getBackgroundSrc = function(row, col) {
@@ -464,7 +467,7 @@
           break;
         }
       }
-      // alert(promoteTo);
+      alert($scope.promoteTo);
       dismissModal(modalName);
     };
 
@@ -484,7 +487,6 @@
     $scope.cols = getIntegersTill(colsNum);
     $scope.rowsNum = rowsNum;
     $scope.colsNum = colsNum;
-    $scope.player = $scope.turnIndex === 0 ? 'W' : 'B';
 
     gameService.setGame({
       gameDeveloperEmail: "xzzhuchen@gmail.com",
