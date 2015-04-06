@@ -64,8 +64,6 @@
           <!-- background image -->
           <!-- <img ng-src="{{getBackgroundSrc(row, col)}}" classs="background_image" width="100%" height="100%" style="z-index: -1;" id="MyBackground{{row}}x{{col}}"> -->
           <rect width="100%" height="100%" ng-attr-fill="{{getBackgroundFill(row, col)}}" id="MyBackground{{row}}x{{col}}" />
-          <circle cx="50%" cy="50%" r="5%"
-            stroke="teal" stroke-width="2" style="display:none; z-index: 60;" id="MyMarker{{row}}x{{col}}"/>
           <div class="img-wrap" id="MyPiece{{row}}x{{col}}">
             <!--The image of the piece get wrapped upon background img-->
             <img ng-class="{piece: true,
@@ -80,7 +78,29 @@
       </div>
     </div>
   </section>
-
 </div>
+
+<div class="overlayModal" ng-show="true" aria-hidden="true">
+  <div class="modal-backdrop in"></div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Congratulations! You can promote this pawn to Queen, Rook, Knight and Bishop. Please choose one. Note: default promotion to Queen if not selected.</h4>
+      </div>
+      <div class="modal-body">
+        <div><label><img src="imgs/Chess-{{player}}Queen.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}Q">Queen</label></div>
+        <div><label><input type="radio" name="promotions" value="{{player}}R">Rook</label></div>
+        <div><label><input type="radio" name="promotions" value="{{player}}K">Knight</label></div>
+        <div><label><input type="radio" name="promotions" value="{{player}}B">Bishop</label></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="updatePromoteTo()">
+          Promote!
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

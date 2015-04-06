@@ -342,9 +342,9 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
           }
 
           // check for promotion
-          if (deltaTo.row === 0 || deltaTo.row === 7) {
-            boardAfterMove[deltaTo.row][deltaTo.col] = (turn === "W" ? "WQ" : "BQ");
-          }
+          // if (deltaTo.row === 0 || deltaTo.row === 7) {
+          //   boardAfterMove[deltaTo.row][deltaTo.col] = (turn === "W" ? "WQ" : "BQ");
+          // }
         } else {
           throw new Error("Illegal move for Pawn");
         }

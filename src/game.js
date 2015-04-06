@@ -20,6 +20,9 @@
     var draggingPiece = null;
     var draggingPieceAvailableMoves = null;
     var nextZIndex = 61;
+    var isPromotionModalShowing = {};
+    var modalName = 'promotionModal';
+    var promoteTo = null;
 
     function sendComputerMove() {
       // var possibleMoves = gameLogic.getPossibleMoves($scope.board, $scope.turnIndex, 
@@ -52,16 +55,6 @@
             {millisecondsLimit: 2000}));
 
     }
-
-    /**
-     * Convert the delta to UI state index
-     * @param row
-     * @param col
-     * @returns {*}
-     */
-    $scope.convertDeltaToUIIndex = function(row, col) {
-      return row * 8 + col;
-    };
 
     function updateUI(params) {
 
@@ -242,6 +235,12 @@
           var move = gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
             $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
             $scope.canCastleQueen, $scope.enpassantPosition);
+          if (shouldPromote($scope.board, $scope.deltaFrom, $scope.deltaTo, $scope.turnIndex)) {
+            showPromotionModal(modalName);
+            // after we call getPromotePiece() we updated promoteTo value
+            move[1].set.value[$scope.deltaTo.row][$scope.deltaTo.col] = promoteTo;
+            promoteTo = null;
+          }
           $scope.isYourTurn = false; // to prevent making another move
           gameService.makeMove(move);
         } catch (e) {
@@ -354,18 +353,18 @@
 
     function getPieceKind(cell){
       switch(cell) {
-        case 'WK': return 'imgs/Chess-whiteKing.png';
-        case 'WQ': return 'imgs/Chess-whiteQueen.png';
-        case 'WR': return 'imgs/Chess-whiteRook.png';
-        case 'WB': return 'imgs/Chess-whiteBishop.png';
-        case 'WN': return 'imgs/Chess-whiteKnight.png';
-        case 'WP': return 'imgs/Chess-whitePawn.png';
-        case 'BK': return 'imgs/Chess-blackKing.png';
-        case 'BQ': return 'imgs/Chess-blackQueen.png';
-        case 'BR': return 'imgs/Chess-blackRook.png';
-        case 'BB': return 'imgs/Chess-blackBishop.png';
-        case 'BN': return 'imgs/Chess-blackKnight.png';
-        case 'BP': return 'imgs/Chess-blackPawn.png';
+        case 'WK': return 'imgs/Chess-WKing.png';
+        case 'WQ': return 'imgs/Chess-WQueen.png';
+        case 'WR': return 'imgs/Chess-WRook.png';
+        case 'WB': return 'imgs/Chess-WBishop.png';
+        case 'WN': return 'imgs/Chess-WKnight.png';
+        case 'WP': return 'imgs/Chess-WPawn.png';
+        case 'BK': return 'imgs/Chess-BKing.png';
+        case 'BQ': return 'imgs/Chess-BQueen.png';
+        case 'BR': return 'imgs/Chess-BRook.png';
+        case 'BB': return 'imgs/Chess-BBishop.png';
+        case 'BN': return 'imgs/Chess-BKnight.png';
+        case 'BP': return 'imgs/Chess-BPawn.png';
         default: return '';
       }
     }
@@ -450,6 +449,34 @@
       return $scope.board[row][col].charAt(0) === 'W';
     };
 
+    function shouldPromote(board, deltaFrom, deltaTo, turnIndex) {
+      var myPawn = (turnIndex === 0 ? 'WP' : 'BP');
+      return myPawn === board[deltaFrom.row][deltaFrom.col] && 
+              (deltaTo.row === 0 || deltaTo.row === 7);
+    }
+
+    $scope.isModalShown = function (modalName) {
+      return isPromotionModalShowing[modalName];
+    };
+
+    $scope.updatePromoteTo = function() {
+      var radioPromotions = document.getElementsByName('promotions');
+      for (var i = 0; i < radioPromotions.length; i++) {
+        if (radioPromotions[i].checked) {
+          promoteTo = radioPromotions[i].value;
+        }
+      }
+      alert(promoteTo);
+    };
+
+    function showPromotionModal(modalName) {
+      isPromotionModalShowing[modalName] = true;
+    }
+
+    function dismissModal(modalName) {
+      delete isPromotionModalShowing[modalName];
+    };
+
     function getIntegersTill(number) {
         var res = [];
         for (var i = 0; i < number; i++) {
@@ -462,6 +489,7 @@
     $scope.cols = getIntegersTill(colsNum);
     $scope.rowsNum = rowsNum;
     $scope.colsNum = colsNum;
+    $scope.player = $scope.turnIndex === 0 ? 'W' : 'B';
 
     gameService.setGame({
       gameDeveloperEmail: "xzzhuchen@gmail.com",
