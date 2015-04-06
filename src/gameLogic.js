@@ -209,9 +209,10 @@ angular.module('myApp', []).factory('gameLogic', function() {
  * @deltaTo: destination position of the piece
  */
   function createMove(board, deltaFrom, deltaTo, turnIndexBeforeMove, 
-                      isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition) {
+                      isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition, promoteTo) {
     console.log("CreateMove arguments: " + angular.toJson([
-board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition
+board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canCastleQueen,
+enpassantPosition, promoteTo
 ]));
     
     if (!board) {
@@ -223,6 +224,7 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
     if (!canCastleKing) { canCastleKing = [true, true]; }
     if (!canCastleQueen) { canCastleQueen = [true, true]; }
     if (!enpassantPosition) { enpassantPosition = {row: null, col: null}; }
+    if (!promoteTo) { promoteTo = ''; }
 
     var destination = board[deltaTo.row][deltaTo.col];
 
@@ -245,7 +247,8 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
         isUnderCheckAfterMove = angular.copy(isUnderCheck),
         canCastleKingAfterMove = angular.copy(canCastleKing),
         canCastleQueenAfterMove = angular.copy(canCastleQueen),
-        enpassantPositionAfterMove = angular.copy(enpassantPosition);
+        enpassantPositionAfterMove = angular.copy(enpassantPosition),
+        promoteToAfterMove = angular.copy(promoteTo);
 
     var piece = board[deltaFrom.row][deltaFrom.col];
     var turn = getTurn(turnIndexBeforeMove);
@@ -342,9 +345,10 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
           }
 
           // check for promotion
-          // if (deltaTo.row === 0 || deltaTo.row === 7) {
-          //   boardAfterMove[deltaTo.row][deltaTo.col] = (turn === "W" ? "WQ" : "BQ");
-          // }
+          if (deltaTo.row === 0 || deltaTo.row === 7) {
+            boardAfterMove[deltaTo.row][deltaTo.col] = (promoteToAfterMove ? promoteToAfterMove : turn + "Q");
+            promoteToAfterMove = '';
+          }
         } else {
           throw new Error("Illegal move for Pawn");
         }
@@ -378,6 +382,7 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
             {set: {key: 'canCastleKing', value: canCastleKingAfterMove}},
             {set: {key: 'canCastleQueen', value: canCastleQueenAfterMove}},
             {set: {key: 'enpassantPosition', value: enpassantPositionAfterMove}},
+            {set: {key: 'promoteTo', value: promoteToAfterMove}},
             ];
   }
 
@@ -881,11 +886,13 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
       var canCastleQueen = stateBeforeMove.canCastleQueen;
       var enpassantPosition = stateBeforeMove.enpassantPosition;
       var board = stateBeforeMove.board;
+      var promoteTo = stateBeforeMove.promoteTo;
 
 console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, turnIndexBeforeMove, 
-                          isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition]));
+                          isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition, promoteTo]));
       var expectedMove = createMove(board, deltaFrom, deltaTo, turnIndexBeforeMove, 
-                          isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition);
+                          isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition, 
+                          promoteTo);
 // console.log("jane!!!!");
 // console.log(expectedMove);
       if (!angular.equals(move, expectedMove)) {

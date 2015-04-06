@@ -22,8 +22,7 @@
     var nextZIndex = 61;
     var isPromotionModalShowing = {};
     var modalName = 'promotionModal';
-    var promoteTo = null;
-
+    
     function sendComputerMove() {
       // var possibleMoves = gameLogic.getPossibleMoves($scope.board, $scope.turnIndex, 
       //       $scope.isUnderCheck, $scope.canCastleKing,
@@ -64,7 +63,8 @@
       $scope.isUnderCheck = params.stateAfterMove.isUnderCheck;
       $scope.canCastleKing = params.stateAfterMove.canCastleKing;
       $scope.canCastleQueen = params.stateAfterMove.canCastleQueen;
-      $scope.enpassantPosition = params.stateAfterMove.enpassantPosition;
+      $scope.enpassantPosition = params.stateAfterMove.enpassantPosition
+      $scope.promoteTo = params.stateAfterMove.promoteTo;
 
 
       if ($scope.board === undefined) {
@@ -232,15 +232,12 @@
           $scope.deltaFrom = from;
           $scope.deltaTo = to;
 
+          if (shouldPromote($scope.board, $scope.deltaFrom, $scope.deltaTo, $scope.turnIndex)) {
+            isPromotionModalShowing[modalName] = true;
+          }
           var move = gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
             $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
-            $scope.canCastleQueen, $scope.enpassantPosition);
-          if (shouldPromote($scope.board, $scope.deltaFrom, $scope.deltaTo, $scope.turnIndex)) {
-            showPromotionModal(modalName);
-            // after we call getPromotePiece() we updated promoteTo value
-            move[1].set.value[$scope.deltaTo.row][$scope.deltaTo.col] = promoteTo;
-            promoteTo = null;
-          }
+            $scope.canCastleQueen, $scope.enpassantPosition, $scope.promoteTo);
           $scope.isYourTurn = false; // to prevent making another move
           gameService.makeMove(move);
         } catch (e) {
@@ -463,19 +460,17 @@
       var radioPromotions = document.getElementsByName('promotions');
       for (var i = 0; i < radioPromotions.length; i++) {
         if (radioPromotions[i].checked) {
-          promoteTo = radioPromotions[i].value;
+          $scope.promoteTo = radioPromotions[i].value;
+          break;
         }
       }
-      alert(promoteTo);
+      // alert(promoteTo);
+      dismissModal(modalName);
     };
-
-    function showPromotionModal(modalName) {
-      isPromotionModalShowing[modalName] = true;
-    }
 
     function dismissModal(modalName) {
       delete isPromotionModalShowing[modalName];
-    };
+    }
 
     function getIntegersTill(number) {
         var res = [];
