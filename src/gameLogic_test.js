@@ -38,7 +38,8 @@ describe("In Chess", function() {
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -69,7 +70,8 @@ describe("In Chess", function() {
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -99,7 +101,8 @@ describe("In Chess", function() {
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -129,7 +132,8 @@ describe("In Chess", function() {
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -159,7 +163,8 @@ describe("In Chess", function() {
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -189,7 +194,8 @@ describe("In Chess", function() {
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -219,7 +225,8 @@ describe("In Chess", function() {
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -249,7 +256,8 @@ describe("In Chess", function() {
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -279,7 +287,8 @@ describe("In Chess", function() {
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -309,7 +318,8 @@ describe("In Chess", function() {
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -339,7 +349,8 @@ describe("In Chess", function() {
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -369,7 +380,8 @@ describe("In Chess", function() {
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -399,7 +411,8 @@ it("placing WN from 7x6 to 5x5 is legal", function() {
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -429,7 +442,8 @@ it("placing WR from 5x7 through WN to 5x0 is ilegal", function() {
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -463,7 +477,8 @@ it("placing WR from 5x7 through WN to 5x0 is ilegal", function() {
       {set: {key: 'isUnderCheck', value: [false, false]}},
       {set: {key: 'canCastleKing', value: [true, true]}},
       {set: {key: 'canCastleQueen', value: [true, true]}},
-      {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+      {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+      {set: {key: 'promoteTo', value: ""}}
       ]);
   });
 
@@ -492,7 +507,8 @@ it("placing WR from 5x7 through WN to 5x0 is ilegal", function() {
       {set: {key: 'isUnderCheck', value: [false, false]}},
       {set: {key: 'canCastleKing', value: [true, true]}},
       {set: {key: 'canCastleQueen', value: [true, true]}},
-      {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+      {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+      {set: {key: 'promoteTo', value: ""}}
       ]);
   });
 
@@ -512,7 +528,8 @@ it("placing WR from 5x7 through WN to 5x0 is ilegal", function() {
       {set: {key: 'isUnderCheck', value: [false, false]}},
       {set: {key: 'canCastleKing', value: [true, true]}},
       {set: {key: 'canCastleQueen', value: [true, true]}},
-      {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+      {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+      {set: {key: 'promoteTo', value: ""}}
       ]);
   });
 
@@ -543,7 +560,8 @@ it("placing WR from 5x7 through WN to 5x0 is ilegal", function() {
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [false, true]}},
         {set: {key: 'canCastleQueen', value: [false, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -574,7 +592,8 @@ it("placing WR from 5x7 through WN to 5x0 is ilegal", function() {
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [false, true]}},
         {set: {key: 'canCastleQueen', value: [false, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -605,7 +624,8 @@ it("placing WR from 5x7 through WN to 5x0 is ilegal", function() {
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   }); 
 
@@ -637,7 +657,8 @@ it("placing WR from 5x7 through WN to 5x0 is ilegal", function() {
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: 3, col: 3}}}
+        {set: {key: 'enpassantPosition', value: {row: 3, col: 3}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -669,7 +690,8 @@ it("placing WR from 5x7 through WN to 5x0 is ilegal", function() {
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -702,7 +724,8 @@ it("placing BR from 3x4 to 3x5 is legal and results WK UnderCheck", function() {
         {set: {key: 'isUnderCheck', value: [true, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -733,7 +756,8 @@ it("placing BR from 3x4 to 3x5 is legal and results WK UnderCheck", function() {
         {set: {key: 'isUnderCheck', value: [true, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -764,7 +788,8 @@ it("placing BR from 3x4 to 3x5 is legal and results WK UnderCheck", function() {
         {set: {key: 'isUnderCheck', value: [true, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -795,7 +820,8 @@ it("placing BR from 3x4 to 3x5 is legal and results WK UnderCheck", function() {
         {set: {key: 'isUnderCheck', value: [true, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -827,7 +853,8 @@ it("placing WK from 2x5 to 3x5 is legal and results BK CHECKMATE thus game ends"
         {set: {key: 'isUnderCheck', value: [false, true]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -859,11 +886,12 @@ it("placing WK from 2x5 to 3x5 is legal and results BK CHECKMATE thus game ends"
         {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
-it("placing WP from 1x4 to 0x4 is legal and results WP promoted to WQ", function() {
+it("placing WP from 1x4 to 0x4 is legal and results WP promoted to WN", function() {
     expectMoveOk(0,
       {board:
         [['', '', '', '', '', '', '', 'BK'], 
@@ -873,11 +901,12 @@ it("placing WP from 1x4 to 0x4 is legal and results WP promoted to WQ", function
           ['', '', '', '', '', '', '', ''],  
           ['', '', '', '', '', '', '', ''], 
           ['', '', '', '', '', '', '', ''],  
-          ['', '', '', '', '', '', '', '']]
+          ['', '', '', '', '', '', '', '']],
+        promoteTo: "WN",
         },
       [{setTurn: {turnIndex: 1}},
         {set: {key: 'board', value:
-          [['', '', '', '', 'WQ', '', '', 'BK'], 
+          [['', '', '', '', 'WN', '', '', 'BK'], 
           ['', '', '', '', '', '', '', ''], 
           ['', '', '', '', '', '', 'WP', ''],  
           ['', '', '', '', '', 'WK', '', ''], 
@@ -887,10 +916,11 @@ it("placing WP from 1x4 to 0x4 is legal and results WP promoted to WQ", function
           ['', '', '', '', '', '', '', '']]}},
         {set: {key: 'deltaFrom', value: {row: 1, col: 4}}},
         {set: {key: 'deltaTo', value: {row: 0, col: 4}}},
-        {set: {key: 'isUnderCheck', value: [false, true]}},
+        {set: {key: 'isUnderCheck', value: [false, false]}},
         {set: {key: 'canCastleKing', value: [true, true]}},
         {set: {key: 'canCastleQueen', value: [true, true]}},
-        {set: {key: 'enpassantPosition', value: {row: null, col: null}}}
+        {set: {key: 'enpassantPosition', value: {row: null, col: null}}},
+        {set: {key: 'promoteTo', value: ""}}
         ]);
   });
 
@@ -913,8 +943,5 @@ it("placing WP from 1x4 to 0x4 is legal and results WP promoted to WQ", function
   
     expect(possibleMoves).toEqual(expectedMoves);    
   });
-
-
-
 
 }); 

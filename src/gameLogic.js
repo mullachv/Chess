@@ -894,7 +894,8 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
                           isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition, 
                           promoteTo);
 // console.log("jane!!!!");
-// console.log(expectedMove);
+// console.log("move:    " + JSON.stringify(move));
+// console.log("expmove: " + JSON.stringify(expectedMove));
       if (!angular.equals(move, expectedMove)) {
         return false;
       }

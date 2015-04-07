@@ -6,30 +6,31 @@
   <script>
   angular.module('myApp')
   .run(function(gameLogic) {
-    var move = gameLogic.createMove([['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
-          ['BP', 'BP', 'BP', '', 'BP', 'BP', 'BP', 'BP'], 
+    var move = gameLogic.createMove([['', '', '', '', '', '', '', 'BK'], 
+          ['', '', '', '', 'WP', '', '', ''], 
+          ['', '', '', '', '', '', 'WP', ''],  
+          ['', '', '', '', '', 'WK', '', ''], 
           ['', '', '', '', '', '', '', ''],  
-          ['', '', '', 'BP', 'WP', '', '', ''], 
+          ['', '', '', '', '', '', '', ''], 
           ['', '', '', '', '', '', '', ''],  
-          ['', '', '', '', '', '', '', 'WP'], 
-          ['WP', 'WP', 'WP', 'WP', 'WB', 'WP', 'WP', 'WR'],  
-          ['WR', 'WN', 'WB', 'WQ', 'WK', '', '', '']], {row: 3, col: 4}, {row: 2, col: 3}, 0,
-          [false, false], [true, true], [true, true], {row: 3, col: 3});
+          ['', '', '', '', '', '', '', '']], {row: 1, col: 4}, {row: 0, col: 4}, 0,
+          [false, false], [true, true], [true, true], {row: 3, col: 3}, "WN");
     console.log("move=", move);
     var params = {turnIndexBeforeMove: 0,
       stateBeforeMove: {
-        board: [['BR', 'BN', 'BB', 'BQ', 'BK', 'BB', 'BN', 'BR'], 
-          ['BP', 'BP', 'BP', '', 'BP', 'BP', 'BP', 'BP'], 
+        board: [['', '', '', '', '', '', '', 'BK'], 
+          ['', '', '', '', 'WP', '', '', ''], 
+          ['', '', '', '', '', '', 'WP', ''],  
+          ['', '', '', '', '', 'WK', '', ''], 
           ['', '', '', '', '', '', '', ''],  
-          ['', '', '', 'BP', 'WP', '', '', ''], 
+          ['', '', '', '', '', '', '', ''], 
           ['', '', '', '', '', '', '', ''],  
-          ['', '', '', '', '', '', '', 'WP'], 
-          ['WP', 'WP', 'WP', 'WP', 'WB', 'WP', 'WP', 'WR'],  
-          ['WR', 'WN', 'WB', 'WQ', 'WK', '', '', '']],
-        enpassantPosition: {row: 3, col: 3},
+          ['', '', '', '', '', '', '', '']],
+        enpassantPosition: {row: null, col: null},
         isUnderCheck:[false, false],
         canCastleKing: [true, true],
         canCastleQueen: [true, true],
+        promoteTo: "WN",
         },
       move: move};
     var res = gameLogic.isMoveOk(params);

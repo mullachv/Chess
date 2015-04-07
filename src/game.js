@@ -51,7 +51,7 @@
       gameService.makeMove(
           aiService.createComputerMove(startingState, $scope.turnIndex,
             // at most 1 second for the AI to choose a move (but might be much quicker)
-            {millisecondsLimit: 2000}));
+            {maxDepth: 2}));
 
     }
 
@@ -158,6 +158,7 @@
           var from = draggingStartedRowCol;
           var to = {row: row, col: col};
           dragDone(from, to);
+          
         } else {
           // Drag continue
           setDraggingPieceTopLeft(getSquareTopLeft(row, col));
@@ -235,20 +236,19 @@
           isPromotionModalShowing[modalName] = true;
         }
       });
-
       try {
-        $scope.deltaFrom = from;
-        $scope.deltaTo = to;
+          $scope.deltaFrom = from;
+          $scope.deltaTo = to;
 
-        var move = gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
-          $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
-          $scope.canCastleQueen, $scope.enpassantPosition, $scope.promoteTo);
-        $scope.isYourTurn = false; // to prevent making another move
-        gameService.makeMove(move);
-      } catch (e) {
-        $log.info(["Exception throwned when create move in position:", from, to]);
-        return;
-      }
+          var move = gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
+            $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
+            $scope.canCastleQueen, $scope.enpassantPosition, $scope.promoteTo);
+          $scope.isYourTurn = false; // to prevent making another move
+          gameService.makeMove(move);
+        } catch (e) {
+          $log.info(["Exception throwned when create move in position:", from, to]);
+          return;
+        }
     }
 
     function getDraggingPieceAvailableMoves(row, col) {
@@ -467,7 +467,7 @@
           break;
         }
       }
-      alert($scope.promoteTo);
+      // alert($scope.promoteTo);
       dismissModal(modalName);
     };
 
@@ -476,11 +476,11 @@
     }
 
     function getIntegersTill(number) {
-        var res = [];
-        for (var i = 0; i < number; i++) {
-          res.push(i);
-        }
-        return res;
+      var res = [];
+      for (var i = 0; i < number; i++) {
+        res.push(i);
+      }
+      return res;
     }
 
     $scope.rows = getIntegersTill(rowsNum);

@@ -209,9 +209,10 @@ angular.module('myApp', []).factory('gameLogic', function() {
  * @deltaTo: destination position of the piece
  */
   function createMove(board, deltaFrom, deltaTo, turnIndexBeforeMove, 
-                      isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition) {
+                      isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition, promoteTo) {
     console.log("CreateMove arguments: " + angular.toJson([
-board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition
+board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canCastleQueen,
+enpassantPosition, promoteTo
 ]));
     
     if (!board) {
@@ -223,6 +224,7 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
     if (!canCastleKing) { canCastleKing = [true, true]; }
     if (!canCastleQueen) { canCastleQueen = [true, true]; }
     if (!enpassantPosition) { enpassantPosition = {row: null, col: null}; }
+    if (!promoteTo) { promoteTo = ''; }
 
     var destination = board[deltaTo.row][deltaTo.col];
 
@@ -245,7 +247,8 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
         isUnderCheckAfterMove = angular.copy(isUnderCheck),
         canCastleKingAfterMove = angular.copy(canCastleKing),
         canCastleQueenAfterMove = angular.copy(canCastleQueen),
-        enpassantPositionAfterMove = angular.copy(enpassantPosition);
+        enpassantPositionAfterMove = angular.copy(enpassantPosition),
+        promoteToAfterMove = angular.copy(promoteTo);
 
     var piece = board[deltaFrom.row][deltaFrom.col];
     var turn = getTurn(turnIndexBeforeMove);
@@ -342,9 +345,10 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
           }
 
           // check for promotion
-          // if (deltaTo.row === 0 || deltaTo.row === 7) {
-          //   boardAfterMove[deltaTo.row][deltaTo.col] = (turn === "W" ? "WQ" : "BQ");
-          // }
+          if (deltaTo.row === 0 || deltaTo.row === 7) {
+            boardAfterMove[deltaTo.row][deltaTo.col] = (promoteToAfterMove ? promoteToAfterMove : turn + "Q");
+            promoteToAfterMove = '';
+          }
         } else {
           throw new Error("Illegal move for Pawn");
         }
@@ -378,6 +382,7 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
             {set: {key: 'canCastleKing', value: canCastleKingAfterMove}},
             {set: {key: 'canCastleQueen', value: canCastleQueenAfterMove}},
             {set: {key: 'enpassantPosition', value: enpassantPositionAfterMove}},
+            {set: {key: 'promoteTo', value: promoteToAfterMove}},
             ];
   }
 
@@ -881,13 +886,16 @@ board, deltaFrom, deltaTo, turnIndexBeforeMove,isUnderCheck, canCastleKing, canC
       var canCastleQueen = stateBeforeMove.canCastleQueen;
       var enpassantPosition = stateBeforeMove.enpassantPosition;
       var board = stateBeforeMove.board;
+      var promoteTo = stateBeforeMove.promoteTo;
 
 console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, turnIndexBeforeMove, 
-                          isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition]));
+                          isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition, promoteTo]));
       var expectedMove = createMove(board, deltaFrom, deltaTo, turnIndexBeforeMove, 
-                          isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition);
+                          isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition, 
+                          promoteTo);
 // console.log("jane!!!!");
-// console.log(expectedMove);
+// console.log("move:    " + JSON.stringify(move));
+// console.log("expmove: " + JSON.stringify(expectedMove));
       if (!angular.equals(move, expectedMove)) {
         return false;
       }
@@ -991,8 +999,7 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
     var nextZIndex = 61;
     var isPromotionModalShowing = {};
     var modalName = 'promotionModal';
-    var promoteTo = null;
-
+    
     function sendComputerMove() {
       // var possibleMoves = gameLogic.getPossibleMoves($scope.board, $scope.turnIndex, 
       //       $scope.isUnderCheck, $scope.canCastleKing,
@@ -1021,7 +1028,7 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
       gameService.makeMove(
           aiService.createComputerMove(startingState, $scope.turnIndex,
             // at most 1 second for the AI to choose a move (but might be much quicker)
-            {millisecondsLimit: 2000}));
+            {maxDepth: 2}));
 
     }
 
@@ -1033,7 +1040,8 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
       $scope.isUnderCheck = params.stateAfterMove.isUnderCheck;
       $scope.canCastleKing = params.stateAfterMove.canCastleKing;
       $scope.canCastleQueen = params.stateAfterMove.canCastleQueen;
-      $scope.enpassantPosition = params.stateAfterMove.enpassantPosition;
+      $scope.enpassantPosition = params.stateAfterMove.enpassantPosition
+      $scope.promoteTo = params.stateAfterMove.promoteTo;
 
 
       if ($scope.board === undefined) {
@@ -1102,12 +1110,14 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
             draggingPiece = document.getElementById("e2e_test_img_" + 
               $scope.getPieceKindInId(row, col) + '_' + 
               draggingStartedRowCol.row + "x" + draggingStartedRowCol.col);
-            draggingPiece.style['z-index'] = ++nextZIndex;
-            draggingPiece.style['width'] = '80%';
-            draggingPiece.style['height'] = '80%';
-            draggingPiece.style['top'] = '10%';
-            draggingPiece.style['left'] = '10%';
-            draggingPiece.style['position'] = 'absolute';
+            if (draggingPiece) {
+              draggingPiece.style['z-index'] = ++nextZIndex;
+              draggingPiece.style['width'] = '80%';
+              draggingPiece.style['height'] = '80%';
+              draggingPiece.style['top'] = '10%';
+              draggingPiece.style['left'] = '10%';
+              draggingPiece.style['position'] = 'absolute';
+            }
 
             draggingPieceAvailableMoves = getDraggingPieceAvailableMoves(r_row, r_col);
             for (var i = 0; i < draggingPieceAvailableMoves.length; i++) {
@@ -1125,6 +1135,7 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
           var from = draggingStartedRowCol;
           var to = {row: row, col: col};
           dragDone(from, to);
+          
         } else {
           // Drag continue
           setDraggingPieceTopLeft(getSquareTopLeft(row, col));
@@ -1197,26 +1208,24 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
           to.col = 7 - to.col;
         }
 
-        try {
+        if (shouldPromote($scope.board, from, to, $scope.turnIndex)) {
+          $scope.player = ($scope.turnIndex === 0 ? 'W' : 'B');
+          isPromotionModalShowing[modalName] = true;
+        }
+      });
+      try {
           $scope.deltaFrom = from;
           $scope.deltaTo = to;
 
           var move = gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
             $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
-            $scope.canCastleQueen, $scope.enpassantPosition);
-          if (shouldPromote($scope.board, $scope.deltaFrom, $scope.deltaTo, $scope.turnIndex)) {
-            showPromotionModal(modalName);
-            // after we call getPromotePiece() we updated promoteTo value
-            move[1].set.value[$scope.deltaTo.row][$scope.deltaTo.col] = promoteTo;
-            promoteTo = null;
-          }
+            $scope.canCastleQueen, $scope.enpassantPosition, $scope.promoteTo);
           $scope.isYourTurn = false; // to prevent making another move
           gameService.makeMove(move);
         } catch (e) {
           $log.info(["Exception throwned when create move in position:", from, to]);
           return;
         }
-      });
     }
 
     function getDraggingPieceAvailableMoves(row, col) {
@@ -1345,8 +1354,7 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
           col = 7 - col;
         }
         return $scope.board[row][col];
-      }
-      
+      }    
     };
 
     $scope.getBackgroundSrc = function(row, col) {
@@ -1432,33 +1440,30 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
       var radioPromotions = document.getElementsByName('promotions');
       for (var i = 0; i < radioPromotions.length; i++) {
         if (radioPromotions[i].checked) {
-          promoteTo = radioPromotions[i].value;
+          $scope.promoteTo = radioPromotions[i].value;
+          break;
         }
       }
-      alert(promoteTo);
+      // alert($scope.promoteTo);
+      dismissModal(modalName);
     };
-
-    function showPromotionModal(modalName) {
-      isPromotionModalShowing[modalName] = true;
-    }
 
     function dismissModal(modalName) {
       delete isPromotionModalShowing[modalName];
-    };
+    }
 
     function getIntegersTill(number) {
-        var res = [];
-        for (var i = 0; i < number; i++) {
-          res.push(i);
-        }
-        return res;
+      var res = [];
+      for (var i = 0; i < number; i++) {
+        res.push(i);
+      }
+      return res;
     }
 
     $scope.rows = getIntegersTill(rowsNum);
     $scope.cols = getIntegersTill(colsNum);
     $scope.rowsNum = rowsNum;
     $scope.colsNum = colsNum;
-    $scope.player = $scope.turnIndex === 0 ? 'W' : 'B';
 
     gameService.setGame({
       gameDeveloperEmail: "xzzhuchen@gmail.com",
@@ -1525,7 +1530,8 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
       for (var j = 0; j < deltaTos.length; j++) {
         var deltaTo = deltaTos[j];
         try {
-          console.log("going to create move: " + JSON.stringify(deltaTo));
+          console.log("going to create move: " + JSON.stringify(deltaFrom) + " --> " + 
+            JSON.stringify(deltaTo));
           possibleMoves.push(gameLogic.createMove(board, deltaFrom, deltaTo, playerIndex,
             isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition));
         } catch (e) {
