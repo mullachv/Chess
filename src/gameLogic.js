@@ -886,16 +886,16 @@ enpassantPosition, promoteTo
       var canCastleQueen = stateBeforeMove.canCastleQueen;
       var enpassantPosition = stateBeforeMove.enpassantPosition;
       var board = stateBeforeMove.board;
-      var promoteTo = stateBeforeMove.promoteTo;
+      var promoteTo = move[8].set.value;
 
 console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, turnIndexBeforeMove, 
                           isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition, promoteTo]));
       var expectedMove = createMove(board, deltaFrom, deltaTo, turnIndexBeforeMove, 
                           isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition, 
                           promoteTo);
-// console.log("jane!!!!");
-// console.log("move:    " + JSON.stringify(move));
-// console.log("expmove: " + JSON.stringify(expectedMove));
+console.log("jane!!!!");
+console.log("move:    " + JSON.stringify(move));
+console.log("expmove: " + JSON.stringify(expectedMove));
       if (!angular.equals(move, expectedMove)) {
         return false;
       }

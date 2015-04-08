@@ -51,7 +51,7 @@
       gameService.makeMove(
           aiService.createComputerMove(startingState, $scope.turnIndex,
             // at most 1 second for the AI to choose a move (but might be much quicker)
-            {maxDepth: 2}));
+            {maxDepth: 3}));
 
     }
 
@@ -214,43 +214,50 @@
 
     function dragDone(from, to) {
       $rootScope.$apply(function () {
-        var msg = "Dragged piece " + from.row + "x" + from.col + " to square " + to.row + "x" + to.col;
-        $log.info(msg);
-        // Update piece in board and make the move
-        if (window.location.search === '?throwException') {
-          throw new Error("Throwing the error because URL has '?throwException'");
-        }
-        if (!$scope.isYourTurn) {
-          return;
-        }
-        // need to rotate the angle if playblack
-        if($scope.rotate) {
-          from.row = 7 - from.row;
-          from.col = 7 - from.col;
-          to.row = 7 - to.row;
-          to.col = 7 - to.col;
-        }
-
-        if (shouldPromote($scope.board, from, to, $scope.turnIndex)) {
-          $scope.player = ($scope.turnIndex === 0 ? 'W' : 'B');
-          isPromotionModalShowing[modalName] = true;
-        }
+          dragDoneHandler(from, to);
       });
-      try {
-          $scope.deltaFrom = from;
-          $scope.deltaTo = to;
-
-          var move = gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
-            $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
-            $scope.canCastleQueen, $scope.enpassantPosition, $scope.promoteTo);
-          $scope.isYourTurn = false; // to prevent making another move
-          gameService.makeMove(move);
-        } catch (e) {
-          $log.info(["Exception throwned when create move in position:", from, to]);
-          return;
-        }
     }
 
+    function dragDoneHandler(from, to) {
+      var msg = "Dragged piece " + from.row + "x" + from.col + " to square " + to.row + "x" + to.col;
+      $log.info(msg);
+      // Update piece in board and make the move
+      if (window.location.search === '?throwException') {
+        throw new Error("Throwing the error because URL has '?throwException'");
+      }
+      if (!$scope.isYourTurn) {
+        return;
+      }
+      // need to rotate the angle if playblack
+      if($scope.rotate) {
+        from.row = 7 - from.row;
+        from.col = 7 - from.col;
+        to.row = 7 - to.row;
+        to.col = 7 - to.col;
+      }
+        
+      $scope.deltaFrom = from;
+      $scope.deltaTo = to;
+      if (shouldPromote($scope.board, from, to, $scope.turnIndex)) {
+        $scope.player = ($scope.turnIndex === 0 ? 'W' : 'B');
+        isPromotionModalShowing[modalName] = true;
+        return;
+      }
+      actuallyMakeMove();      
+    }
+
+    function actuallyMakeMove() {
+      try {
+        var move = gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
+          $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
+          $scope.canCastleQueen, $scope.enpassantPosition, $scope.promoteTo);
+        $scope.isYourTurn = false; // to prevent making another move
+        gameService.makeMove(move);
+      } catch (e) {
+        $log.info(["Exception throwned when create move in position:", $scope.deltaFrom, $scope.deltaTo]);
+        return;
+      }
+    }
     function getDraggingPieceAvailableMoves(row, col) {
       var possibleMoves = gameLogic.getPossibleMoves($scope.board, $scope.turnIndex, 
                       $scope.isUnderCheck, $scope.canCastleKing,
@@ -467,8 +474,9 @@
           break;
         }
       }
-      // alert($scope.promoteTo);
-      dismissModal(modalName);
+      alert($scope.promoteTo);
+      dismissModal(modalName);     
+      actuallyMakeMove();
     };
 
     function dismissModal(modalName) {
