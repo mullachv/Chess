@@ -1224,6 +1224,7 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
     }
 
     function actuallyMakeMove() {
+console.log("$scope.promoteTo in actuallyMakeMove: " + JSON.stringify($scope.promoteTo));
       try {
         var move = gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
           $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
@@ -1231,7 +1232,7 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
         $scope.isYourTurn = false; // to prevent making another move
         gameService.makeMove(move);
       } catch (e) {
-        $log.info(["Exception throwned when create move in position:", $scope.deltaFrom, $scope.deltaTo]);
+        $log.info(["Exception thrown when create move in position:", $scope.deltaFrom, $scope.deltaTo]);
         return;
       }
     }

@@ -20,13 +20,8 @@
   <script src="http://yoav-zibin.github.io/emulator/angular-translate/angular-translate.2.6.1.min.js"></script>
 
   <!-- stylesheets -->
-  <link rel="stylesheet"
-        href="bower_components/html5-boilerplate/css/normalize.css">
-  <link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css">
-  <link rel="stylesheet"
-        href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <link rel="stylesheet"
-        href="vendor/font-awesome-4.2.0/css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
   <link rel="stylesheet" type="text/css" href="http://yoav-zibin.github.io/emulator/main.css">
   <link rel="stylesheet" type="text/css" href="game.css">
 </head>
@@ -67,7 +62,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">Congratulations! You can promote this pawn to Queen, Rook, Knight and Bishop. Please choose one. Note: default promotion to Queen if not selected.</h4>
+        <h4 class="modal-title" id="myModalLabel">Congratulations! Which piece would you like to promote to?</h4>
       </div>
       <div class="modal-body">
         <div><label><img src="imgs/Chess-{{player}}Queen.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}Q">Queen</label></div>
