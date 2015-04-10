@@ -347,7 +347,7 @@ enpassantPosition, promoteTo
           // check for promotion
           if (deltaTo.row === 0 || deltaTo.row === 7) {
             boardAfterMove[deltaTo.row][deltaTo.col] = (promoteToAfterMove ? promoteToAfterMove : turn + "Q");
-            promoteToAfterMove = '';
+            // promoteToAfterMove = '';
           }
         } else {
           throw new Error("Illegal move for Pawn");
@@ -893,9 +893,9 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
       var expectedMove = createMove(board, deltaFrom, deltaTo, turnIndexBeforeMove, 
                           isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition, 
                           promoteTo);
-console.log("jane!!!!");
-console.log("move:    " + JSON.stringify(move));
-console.log("expmove: " + JSON.stringify(expectedMove));
+// console.log("jane!!!!");
+// console.log("move:    " + JSON.stringify(move));
+// console.log("expmove: " + JSON.stringify(expectedMove));
       if (!angular.equals(move, expectedMove)) {
         return false;
       }

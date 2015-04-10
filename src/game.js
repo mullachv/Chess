@@ -474,7 +474,7 @@
           break;
         }
       }
-      alert($scope.promoteTo);
+      // alert($scope.promoteTo);
       dismissModal(modalName);     
       actuallyMakeMove();
     };
