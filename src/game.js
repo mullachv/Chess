@@ -281,51 +281,6 @@ console.log("$scope.promoteTo in actuallyMakeMove: " + JSON.stringify($scope.pro
       return draggingPieceAvailableMoves;
     }
 
-/*    $scope.cellClicked = function (row, col) {
-      $log.info(["Clicked on cell:", row, col]);
-
-      // to test encoding a stack trace with sourcemap
-      if (window.location.search === '?throwException') {
-        throw new Error("Throwing the error because URL has '?throwException'");
-      }
-      if (!$scope.isYourTurn) {
-        return;
-      }
-      if($scope.rotate) {
-        row = 7 - row;
-        col = 7 - col;
-      }
-
-      if (selectedCells.length === 1) {
-        if (isValidToCell($scope.turnIndex, row, col)) {
-          selectedCells.push({row: row, col: col});
-        } else {
-          selectedCells[0] = {row: row, col: col};
-        }
-      } else {
-        selectedCells[0] = {row: row, col: col};
-      }
-
-      // when from and to cell are clicked, we can make a move
-      if (selectedCells.length === 2) {
-        try {
-          $scope.deltaFrom = selectedCells[0];
-          $scope.deltaTo = selectedCells[1];
-
-          var move = gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
-            $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
-            $scope.canCastleQueen, $scope.enpassantPosition);
-          $scope.isYourTurn = false; // to prevent making another move
-          gameService.makeMove(move);
-        } catch (e) {
-          $log.info(["Exception throwned when create move in position:", row, col]);
-          return;
-        } finally {
-          selectedCells = [];
-        }
-      }
-    }; */
-
     function isValidToCell(turnIndex, row, col) {
       var opponent = turnIndex === 0 ? 'B' : 'W';
       return $scope.board[row][col] === '' || 
