@@ -10,6 +10,26 @@
         aiService, resizeGameAreaService, $translate) {
 
     'use strict';
+
+    $translate('CHESS_GAME').then(function (translation) {
+      console.log("Translation of CHESS_GAME' is " + translation);
+    });
+    $translate('PROMOTION_MESSAGE').then(function (translation) {
+      console.log("Translation of PROMOTION_MESSAGE' is " + translation);
+    });
+    $translate('PROMOTE_QUEEN').then(function (translation) {
+      console.log("Translation of PROMOTE_QUEEN' is " + translation);
+    });
+    $translate('PROMOTE_ROOK').then(function (translation) {
+      console.log("Translation of PROMOTE_ROOK' is " + translation);
+    });
+    $translate('PROMOTE_BISHOP').then(function (translation) {
+      console.log("Translation of PROMOTE_BISHOP' is " + translation);
+    });
+    $translate('PROMOTE_KNIGHT').then(function (translation) {
+      console.log("Translation of PROMOTE_KNIGHT' is " + translation);
+    });
+
     resizeGameAreaService.setWidthToHeight(1);
 
     var selectedCells = [];       // record the clicked cells
@@ -24,35 +44,22 @@
     var modalName = 'promotionModal';
     
     function sendComputerMove() {
-      // var possibleMoves = gameLogic.getPossibleMoves($scope.board, $scope.turnIndex, 
-      //       $scope.isUnderCheck, $scope.canCastleKing,
-      //       $scope.canCastleQueen, $scope.enpassantPosition);
-      // if (possibleMoves.length) {
-      //   var index1 = Math.floor(Math.random() * possibleMoves.length);
-      //   var pm = possibleMoves[index1];
-      //   var index2 = Math.floor(Math.random() * pm[1].length);
-      //   $scope.deltaFrom = pm[0];
-      //   $scope.deltaTo = pm[1][index2];
+      var possibleMoves = gameLogic.getPossibleMoves($scope.board, $scope.turnIndex, 
+            $scope.isUnderCheck, $scope.canCastleKing,
+            $scope.canCastleQueen, $scope.enpassantPosition);
+      if (possibleMoves.length) {
+        var index1 = Math.floor(Math.random() * possibleMoves.length);
+        var pm = possibleMoves[index1];
+        var index2 = Math.floor(Math.random() * pm[1].length);
+        $scope.deltaFrom = pm[0];
+        $scope.deltaTo = pm[1][index2];
 
-      //   gameService.makeMove(gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
-      //       $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
-      //       $scope.canCastleQueen, $scope.enpassantPosition));
-      // } else {
-      //   $log.info("no there are no possible moves!");
-      // }
-      var startingState = {
-        board: $scope.board,
-        isUnderCheck: $scope.isUnderCheck,
-        canCastleKing: $scope.canCastleKing,
-        canCastleQueen: $scope.canCastleQueen,
-        enpassantPosition: $scope.enpassantPosition
+        gameService.makeMove(gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
+            $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
+            $scope.canCastleQueen, $scope.enpassantPosition));
+      } else {
+        $log.info("no there are no possible moves!");
       }
-
-      gameService.makeMove(
-          aiService.createComputerMove(startingState, $scope.turnIndex,
-            // at most 1 second for the AI to choose a move (but might be much quicker)
-            {maxDepth: 3}));
-
     }
 
     function updateUI(params) {
@@ -247,7 +254,6 @@
     }
 
     function actuallyMakeMove() {
-console.log("$scope.promoteTo in actuallyMakeMove: " + JSON.stringify($scope.promoteTo));
       try {
         var move = gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
           $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
@@ -459,6 +465,10 @@ console.log("$scope.promoteTo in actuallyMakeMove: " + JSON.stringify($scope.pro
       isMoveOk: gameLogic.isMoveOk,
       updateUI: updateUI
     });
+  }])
+  .config(['$translateProvider', function($translateProvider) {
+    'use strict';
+    $translateProvider.init(['en', 'zh']);
   }]);
 
 })();
