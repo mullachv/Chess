@@ -1006,6 +1006,9 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
     $translate('PROMOTE_KNIGHT').then(function (translation) {
       console.log("Translation of PROMOTE_KNIGHT' is " + translation);
     });
+    $translate('PROMOTE_ACTION').then(function (translation) {
+      console.log("Translation of PROMOTE_ACTION is " + translation);
+    });
 
     resizeGameAreaService.setWidthToHeight(1);
 
