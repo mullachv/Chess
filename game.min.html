@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Chess</title>
+  <title>{{ 'CHESS_GAME' | translate }}</title>
   <meta name="description" content="Chess game">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -39,7 +39,6 @@
           style="position:absolute;"
           ng-show="true">
           <!-- background image -->
-          <!-- <img ng-src="{{getBackgroundSrc(row, col)}}" classs="background_image" width="100%" height="100%" style="z-index: -1;" id="MyBackground{{row}}x{{col}}"> -->
           <rect width="100%" height="100%" ng-attr-fill="{{getBackgroundFill(row, col)}}" id="MyBackground{{row}}x{{col}}" />
           <div class="img-wrap" id="MyPiece{{row}}x{{col}}">
             <!--The image of the piece get wrapped upon background img-->
@@ -62,17 +61,17 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">Congratulations! Which piece would you like to promote to?</h4>
+        <h4 class="modal-title" id="myModalLabel">{{ 'PROMOTION_MESSAGE' | translate }}</h4>
       </div>
       <div class="modal-body">
-        <div><label><img src="imgs/Chess-{{player}}Queen.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}Q" checked>Queen</label></div>
-        <div><label><img src="imgs/Chess-{{player}}Rook.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}R">Rook</label></div>
-        <div><label><img src="imgs/Chess-{{player}}Knight.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}N">Knight</label></div>
-        <div><label><img src="imgs/Chess-{{player}}Bishop.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}B">Bishop</label></div>
+        <div><label><img src="imgs/Chess-{{player}}Queen.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}Q" checked>{{ 'PROMOTE_QUEEN' | translate }}</label></div>
+        <div><label><img src="imgs/Chess-{{player}}Rook.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}R">{{ 'PROMOTE_ROOK' | translate }}</label></div>
+        <div><label><img src="imgs/Chess-{{player}}Knight.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}N">{{ 'PROMOTE_KNIGHT' | translate }}</label></div>
+        <div><label><img src="imgs/Chess-{{player}}Bishop.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}B">{{ 'PROMOTE_BISHOP' | translate }}</label></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" ng-click="updatePromoteTo()">
-          Promote!
+          {{ 'PROMOTE_ACTION' | translate }}!
         </button>
       </div>
     </div>
