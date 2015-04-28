@@ -5,5 +5,5 @@ window.angularTranslations = {
   PROMOTE_ROOK: "Rook",
   PROMOTE_BISHOP: "Bishop",
   PROMOTE_KNIGHT: "Knight",
-  PROMOTE_ACTION: "Promote"
+  PROMOTE_ACTION: "Promote",
 };

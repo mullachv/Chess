@@ -12,22 +12,22 @@
     'use strict';
 
     $translate('CHESS_GAME').then(function (translation) {
-      console.log("Translation of CHESS_GAME' is " + translation);
+      console.log("Translation of CHESS_GAME is " + translation);
     });
     $translate('PROMOTION_MESSAGE').then(function (translation) {
-      console.log("Translation of PROMOTION_MESSAGE' is " + translation);
+      console.log("Translation of PROMOTION_MESSAGE is " + translation);
     });
     $translate('PROMOTE_QUEEN').then(function (translation) {
-      console.log("Translation of PROMOTE_QUEEN' is " + translation);
+      console.log("Translation of PROMOTE_QUEEN is " + translation);
     });
     $translate('PROMOTE_ROOK').then(function (translation) {
-      console.log("Translation of PROMOTE_ROOK' is " + translation);
+      console.log("Translation of PROMOTE_ROOK is " + translation);
     });
     $translate('PROMOTE_BISHOP').then(function (translation) {
-      console.log("Translation of PROMOTE_BISHOP' is " + translation);
+      console.log("Translation of PROMOTE_BISHOP is " + translation);
     });
     $translate('PROMOTE_KNIGHT').then(function (translation) {
-      console.log("Translation of PROMOTE_KNIGHT' is " + translation);
+      console.log("Translation of PROMOTE_KNIGHT is " + translation);
     });
     $translate('PROMOTE_ACTION').then(function (translation) {
       console.log("Translation of PROMOTE_ACTION is " + translation);
