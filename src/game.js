@@ -107,6 +107,7 @@
       // clear up the selectedCells and waiting for next valid move
       selectedCells = [];    
     }
+    
     window.e2e_test_stateService = stateService;
     window.handleDragEvent = handleDragEvent;
 

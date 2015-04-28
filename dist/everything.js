@@ -468,12 +468,13 @@ enpassantPosition, promoteTo
   function getKingPossibleMoves(board, turnIndex, startPos, isUnderCheck, canCastleKing, canCastleQueen) {
     var fromRow = startPos.row,
         fromCol = startPos.col,
-        destinations = [];
+        destinations = [],
+        opponent = getOpponent(turnIndex);
     // standard moves
     for (var i = fromRow - 1; i <= fromRow + 1; i++) {
       for (var j = fromCol - 1; j <= fromCol + 1; j++) {
         if (i >= 0 && i <= 7 && j >= 0 && j <= 7) {
-          if (board[i][j] === '') {
+          if (board[i][j] === '' || board[i][j].charAt(0) === opponent) {
             var curPos = {row: i, col: j};
             if (moveAndCheck(board, turnIndex, startPos, curPos)) {
               destinations.push(curPos);
@@ -1084,6 +1085,7 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
       // clear up the selectedCells and waiting for next valid move
       selectedCells = [];    
     }
+    
     window.e2e_test_stateService = stateService;
     window.handleDragEvent = handleDragEvent;
 
