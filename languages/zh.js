@@ -14,12 +14,12 @@ window.angularTranslations = {
   RULES_SLIDE4: "皇后最厉害，可走横竖斜",
   RULES_SLIDE5: "骑士走日格",
   RULES_SLIDE6: "士兵走一格，出兵可走二，吃子必斜线",
-  RULES_SLIDE7: ""
-  RULES_SLIDE8: "",
-  RULES_SLIDE9: ""
-  RULES_SLIDE10: "Check: When a king is under immediate attack by one or two of the opponent's pieces."
-  RULES_SLIDE11: "Endgame - wins by Checkmate",
-  RULES_SLIDE11-2: "Make opponent's king has no available legal moves while is under check by you.",
-  RULES_SLIDE12: "Endgame - draws by Stalemate",
-  RULES_SLIDE12-2: "Make opponent's king has no available legal moves while is NOT under check by you.",
+  RULES_SLIDE7: "吃过路兵（En passant）：法语通过的意思。当兵推进两个格（只有它以前未走过）并且通过邻线敌方已经推进到它的第5线的兵，敌兵能吃掉这个兵好像它只走了只一格一样。敌兵吃不吃都可以，但必须在第一时机决定；否则，兵的特殊走法的特殊条件消失了，权利消失。",
+  RULES_SLIDE8: "升变（Promotion）：也叫变后。当兵达到第8横线，它能被升变为同样颜色的象、马、车或（最共同地）王后。",
+  RULES_SLIDE9: "王车易位（Castle）：同时移动国王和车。易位是棋手在一步棋中走两个棋子的唯一的走法。易位允许棋手移动他的国王离开中心到侧面（开局中的重头戏），在那儿它可能由兵保护。另外，易位出动了一只车。",
+  RULES_SLIDE10: "将军：本方棋子正在对手棋子的攻击范围内",
+  RULES_SLIDE11: "结束游戏 - 产生赢家：将死（checkmate）",
+  RULES_SLIDE11_2: "无法解脱的对王的攻击。当一个棋手将死他的对手的国王，他就赢了此局。",
+  RULES_SLIDE12: "结束游戏 - 和局：无子可动（Stalemate）",
+  RULES_SLIDE12_2: "一个棋手被束缚得很厉害，以至于任一合乎规则的走法都将暴露他的国王于直接的将军之下。",
 };
