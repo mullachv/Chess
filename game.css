@@ -53,6 +53,17 @@ svg .darkSquare {
   fill: rgb(230, 138, 0);
 }
 
+.carousel-indicators li {
+  background-color: black;
+}
+.carousel-indicators .active {
+  background-color: green;
+}
+td {
+  margin: auto;
+  padding:0 5px 0 5px;
+}
+
 .modal-dialog {
   z-index: 1001;
 }

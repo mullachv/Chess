@@ -72,7 +72,7 @@
    *
    */
 
-angular.module('myApp', []).factory('gameLogic', function() {
+angular.module('myApp', ['ngTouch', 'ui.bootstrap']).factory('gameLogic', function() {
 
 /** Returns the initial Chess board, which is a 8x8 matrix containing ''. */
   function getInitialBoard() {

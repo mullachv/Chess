@@ -13,6 +13,17 @@
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.js"></script>
   <!-- /build -->
 
+  <!-- For the game rules/instructions, I use carousel from Angular UI + Bootstrap -->
+  <!-- build:css http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css -->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.css">
+  <!-- /build -->
+  <!-- build:js http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-touch.min.js -->
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-touch.js"></script>
+  <!-- /build -->
+  <!-- build:js http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js -->
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.js"></script>
+  <!-- /build -->
+
   <!-- build:js dist/everything.min.js -->
   <script src="src/gameLogic.js"></script>
   <script src="src/game.js"></script>
@@ -43,6 +54,58 @@
 </head>
 
 <body ng-cloak ng-controller="ChessCtrl">
+<div style="position:absolute; bottom:5px; left: 5px">
+  <span ng-click="isHelpModalShown = true"
+      class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+</div>
+
+<div class="overlayModal" ng-show="isHelpModalShown" aria-hidden="true">
+  <div class="modal-backdrop in"></div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="isHelpModalShown = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">
+          {{ 'RULES_OF_CHESS' | translate }}
+        </h4>
+      </div>
+      <div class="modal-body">
+        <carousel style="height: 150px;">
+          <slide>
+            <table>
+              <tr>
+                <td>
+                  {{ 'RULES_SLIDE1' | translate }}
+                </td>
+                <td>
+                  <img src="imgs/HelpSlide1.png" style="height:100px;">
+                </td>
+              </tr>
+            </table>
+          </slide>
+          <slide>
+            <table>
+              <tr>
+                <td>
+                {{ 'RULES_SLIDE2' | translate }}
+                </td>
+                <td>
+                  <img src="imgs/HelpSlide2.png" style="height:100px;">
+                </td>
+              </tr>
+            </table>
+          </slide>
+        </carousel>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="isHelpModalShown = false">
+          {{ 'CLOSE' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <div id="gameArea">
   <section id="board">
