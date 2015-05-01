@@ -461,6 +461,7 @@
     $scope.cols = getIntegersTill(colsNum);
     $scope.rowsNum = rowsNum;
     $scope.colsNum = colsNum;
+    $scope.slides = 2;
 
     gameService.setGame({
       gameDeveloperEmail: "xzzhuchen@gmail.com",
