@@ -103,6 +103,13 @@ module.exports = function(grunt) {
             'imgs/HelpSlide4.png',
             'imgs/HelpSlide5.png',
             'imgs/HelpSlide6.png',
+            'imgs/HelpSlide7.png',
+            'imgs/HelpSlide8-1.png',
+            'imgs/HelpSlide8-2.png',
+            'imgs/HelpSlide9.png',
+            'imgs/HelpSlide10.png',
+            'imgs/HelpSlide11.png',
+            'imgs/HelpSlide12.png',
           ],
           network: [
           '/dist/everything.min.js.map', 

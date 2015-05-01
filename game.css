@@ -87,6 +87,10 @@ td {
   height:100%;
 }
 
+.helperImg {
+  height: 150px;
+}
+
 .slowlyAppear {
   -webkit-animation: slowlyAppear 0.3s linear; /* Chrome, Safari, Opera */
   animation: slowlyAppear 0.3s linear;
