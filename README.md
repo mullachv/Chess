@@ -1,4 +1,6 @@
 # Chess
+Playable version: <a href="http://cz764.github.io/Chess/game.min.html">1.0.1</a>
+
 This repository is created by the course of Social Multi-player Games implementing the game Chess, implemented using Javascript and AngularJS. Wiki Page is http://en.wikipedia.org/wiki/Chess
 
 ## Rules
