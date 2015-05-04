@@ -988,30 +988,9 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
         aiService, resizeGameAreaService, $translate) {
 
     'use strict';
-
-    $translate('CHESS_GAME').then(function (translation) {
-      console.log("Translation of CHESS_GAME is " + translation);
-    });
-    $translate('PROMOTION_MESSAGE').then(function (translation) {
-      console.log("Translation of PROMOTION_MESSAGE is " + translation);
-    });
-    $translate('PROMOTE_QUEEN').then(function (translation) {
-      console.log("Translation of PROMOTE_QUEEN is " + translation);
-    });
-    $translate('PROMOTE_ROOK').then(function (translation) {
-      console.log("Translation of PROMOTE_ROOK is " + translation);
-    });
-    $translate('PROMOTE_BISHOP').then(function (translation) {
-      console.log("Translation of PROMOTE_BISHOP is " + translation);
-    });
-    $translate('PROMOTE_KNIGHT').then(function (translation) {
-      console.log("Translation of PROMOTE_KNIGHT is " + translation);
-    });
-    $translate('PROMOTE_ACTION').then(function (translation) {
-      console.log("Translation of PROMOTE_ACTION is " + translation);
-    });
-
     resizeGameAreaService.setWidthToHeight(1);
+
+    console.log("Translation of 'RULES_OF_CHESS' is " + $translate('RULES_OF_CHESS'));
 
     var selectedCells = [];       // record the clicked cells
     var gameArea = document.getElementById("gameArea");
@@ -1117,7 +1096,8 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
 
         if (type === "touchstart" && !draggingStartedRowCol) {
           // drag started
-          if ($scope.board[r_row][r_col]) {            
+          var curPiece = $scope.board[r_row][r_col];
+          if (curPiece && curPiece.charAt(0) === getTurn($scope.turnIndex)) {            
             draggingStartedRowCol = {row: row, col: col};
             draggingPiece = document.getElementById("e2e_test_img_" + 
               $scope.getPieceKindInId(row, col) + '_' + 
@@ -1228,7 +1208,7 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
       $scope.deltaFrom = from;
       $scope.deltaTo = to;
       if (shouldPromote($scope.board, from, to, $scope.turnIndex)) {
-        $scope.player = ($scope.turnIndex === 0 ? 'W' : 'B');
+        $scope.player = getTurn($scope.turnIndex);
         isPromotionModalShowing[modalName] = true;
         return;
       }
@@ -1270,7 +1250,7 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
     }
 
     function isValidToCell(turnIndex, row, col) {
-      var opponent = turnIndex === 0 ? 'B' : 'W';
+      var opponent = getOpponent(turnIndex);
       return $scope.board[row][col] === '' || 
               $scope.board[row][col].charAt(0) === opponent;
     }
@@ -1280,7 +1260,7 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
         row = 7 - row;
         col = 7 - col;
       }
-      var turn = $scope.turnIndex === 0 ? 'W' : 'B';
+      var turn = getTurn($scope.turnIndex);
 
       return draggingStartedRowCol && draggingStartedRowCol.row === row && 
               draggingStartedRowCol.col === col && $scope.board[row][col].charAt(0) === turn;
@@ -1358,7 +1338,7 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
           row = 7 - row;
           col = 7 - col;
         }
-        var turn = $scope.turnIndex === 0 ? 'W' : 'B';
+        var turn = getTurn($scope.turnIndex);
         if ($scope.board[row][col].charAt(0) === turn) {
           if (!$scope.isUnderCheck) { $scope.isUnderCheck = [false, false]; }
           if (!$scope.canCastleKing) { $scope.canCastleKing = [true, true]; }
@@ -1373,6 +1353,14 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
         }
       }     
     };
+
+    function getTurn(turnIndex) {
+      return turnIndex === 0 ? 'W' : 'B';
+    }
+
+    function getOpponent(turnIndex) {
+      return turnIndex === 0 ? 'B' : 'W';
+    }
 
     function cellInPossibleMoves(row, col, possibleMoves) {
       var cell = {row: row, col: col};  
@@ -1447,10 +1435,6 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
       isMoveOk: gameLogic.isMoveOk,
       updateUI: updateUI
     });
-  }])
-  .config(['$translateProvider', function($translateProvider) {
-    'use strict';
-    $translateProvider.init(['en', 'zh']);
   }]);
 
 })();;angular.module('myApp').factory('aiService',

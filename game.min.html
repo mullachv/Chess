@@ -16,14 +16,12 @@
 
   <script src="dist/everything.min.js"></script>
 
-  <script src="http://yoav-zibin.github.io/emulator/dist/gameServices.min.js"></script>
+  <script>window.angularTranslationLanguages = ['en', 'zh'];</script>
+  <script src="http://yoav-zibin.github.io/emulator/dist/turnBasedServices.2.min.js"></script>
 
   <!--Enable the drag and drop in mobile device-->
   <script src="http://yoav-zibin.github.io/emulator/examples/drag_n_drop/dragAndDropListeners.js"></script>
-
-  <script src="languages/en.js"></script>
-  <script src="http://yoav-zibin.github.io/emulator/angular-translate/angular-translate.2.6.1.min.js"></script>
-
+  
   <!-- stylesheets -->
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
@@ -140,8 +138,7 @@
                 {{ 'RULES_SLIDE8' | translate }}
                 <img src="imgs/HelpSlide8-1.png" class="helperImg">
                 </td>
-                <td>        
-                  <img src="imgs/HelpSlide8-2.png" class="helperImg">
+                <td>
                 </td>
               </tr>
             </table>
