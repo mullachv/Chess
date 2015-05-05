@@ -4,7 +4,7 @@
   .controller('ChessCtrl',
       ['$scope', '$rootScope','$log', '$timeout',
        'gameService', 'stateService', 'gameLogic', 
-       'aiService', 'resizeGameAreaService', '$translate', 'dragAndDropService'
+       'aiService', 'resizeGameAreaService', '$translate', 'dragAndDropService',
       function ($scope, $rootScope, $log, $timeout,
         gameService, stateService, gameLogic, 
         aiService, resizeGameAreaService, $translate, dragAndDropService) {
@@ -88,7 +88,6 @@
     }
     
     window.e2e_test_stateService = stateService;
-    window.handleDragEvent = handleDragEvent;
     dragAndDropService.addDragListener("gameArea", handleDragEvent);
     function handleDragEvent(type, clientX, clientY) {
       // Center point in gameArea
