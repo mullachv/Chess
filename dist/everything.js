@@ -982,10 +982,10 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
   .controller('ChessCtrl',
       ['$scope', '$rootScope','$log', '$timeout',
        'gameService', 'stateService', 'gameLogic', 
-       'aiService', 'resizeGameAreaService', '$translate',
+       'aiService', 'resizeGameAreaService', '$translate', 'dragAndDropService',
       function ($scope, $rootScope, $log, $timeout,
         gameService, stateService, gameLogic, 
-        aiService, resizeGameAreaService, $translate) {
+        aiService, resizeGameAreaService, $translate, dragAndDropService) {
 
     'use strict';
     resizeGameAreaService.setWidthToHeight(1);
@@ -1066,8 +1066,7 @@ console.log("isMoveOk arguments: " + angular.toJson([board, deltaFrom, deltaTo, 
     }
     
     window.e2e_test_stateService = stateService;
-    window.handleDragEvent = handleDragEvent;
-
+    dragAndDropService.addDragListener("gameArea", handleDragEvent);
     function handleDragEvent(type, clientX, clientY) {
       // Center point in gameArea
       var x = clientX - gameArea.offsetLeft;
