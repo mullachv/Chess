@@ -90,7 +90,7 @@ module.exports = function(grunt) {
             'http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/fonts/glyphicons-halflings-regular.ttf',
             'http://yoav-zibin.github.io/emulator/main.css',
             '/dist/everything.min.js',
-            '/game.css',
+            'game.css',
             'languages/en.js',
             'imgs/HelpSlide1.png',
             'imgs/HelpSlide2.png',
