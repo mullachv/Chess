@@ -31,10 +31,10 @@
   <!-- /build -->
 
   <script>window.angularTranslationLanguages = ['en', 'zh'];</script>
-  <!-- build:js http://yoav-zibin.github.io/emulator/dist/turnBasedServices.2.min.js -->
-  <script crossorigin="anonymous" src="http://yoav-zibin.github.io/emulator/dist/turnBasedServices.2.js"></script>
+  <!-- build:js http://yoav-zibin.github.io/emulator/dist/turnBasedServices.3.min.js -->
+  <script crossorigin="anonymous" src="http://yoav-zibin.github.io/emulator/dist/turnBasedServices.3.js"></script>
   <!-- /build -->
-  
+
   <!-- stylesheets -->
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
@@ -42,7 +42,7 @@
   <link rel="stylesheet" type="text/css" href="game.css">
 </head>
 
-<body ng-cloak ng-controller="ChessCtrl">
+<body ng-cloak>
 <div style="position:absolute; bottom:5px; left: 5px">
   <span ng-click="isHelpModalShown = true"
       class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
@@ -254,10 +254,10 @@
         <h4 class="modal-title" id="myModalLabel">{{ 'PROMOTION_MESSAGE' | translate }}</h4>
       </div>
       <div class="modal-body">
-        <div><label><img src="imgs/Chess-{{player}}Queen.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}Q" checked>{{ 'PROMOTE_QUEEN' | translate }}</label></div>
-        <div><label><img src="imgs/Chess-{{player}}Rook.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}R">{{ 'PROMOTE_ROOK' | translate }}</label></div>
-        <div><label><img src="imgs/Chess-{{player}}Knight.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}N">{{ 'PROMOTE_KNIGHT' | translate }}</label></div>
-        <div><label><img src="imgs/Chess-{{player}}Bishop.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}B">{{ 'PROMOTE_BISHOP' | translate }}</label></div>
+        <div><label><img ng-src="imgs/Chess-{{player}}Queen.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}Q" checked>{{ 'PROMOTE_QUEEN' | translate }}</label></div>
+        <div><label><img ng-src="imgs/Chess-{{player}}Rook.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}R">{{ 'PROMOTE_ROOK' | translate }}</label></div>
+        <div><label><img ng-src="imgs/Chess-{{player}}Knight.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}N">{{ 'PROMOTE_KNIGHT' | translate }}</label></div>
+        <div><label><img ng-src="imgs/Chess-{{player}}Bishop.png" alt="queen" /><input type="radio" name="promotions" value="{{player}}B">{{ 'PROMOTE_BISHOP' | translate }}</label></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" ng-click="updatePromoteTo()">

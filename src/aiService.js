@@ -1,6 +1,8 @@
 angular.module('myApp').factory('aiService',
-    ["alphaBetaService", "gameLogic",
-      function(alphaBetaService, gameLogic) {
+    // ["alphaBetaService", "gameLogic",
+    //   function(alphaBetaService, gameLogic) {
+        ["gameLogic",
+          function(gameLogic) {
 
   'use strict';
 
@@ -54,14 +56,14 @@ angular.module('myApp').factory('aiService',
       for (var j = 0; j < deltaTos.length; j++) {
         var deltaTo = deltaTos[j];
         try {
-          console.log("going to create move: " + JSON.stringify(deltaFrom) + " --> " + 
+          console.log("going to create move: " + JSON.stringify(deltaFrom) + " --> " +
             JSON.stringify(deltaTo));
           possibleMoves.push(gameLogic.createMove(board, deltaFrom, deltaTo, playerIndex,
             isUnderCheck, canCastleKing, canCastleQueen, enpassantPosition));
         } catch (e) {
           // cannot create move with this possible delta, should continue
         }
-      }     
+      }
     }
     return possibleMoves;
   }

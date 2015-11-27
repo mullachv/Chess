@@ -1,15 +1,50 @@
 (function(){
-  
+
   angular.module('myApp')
-  .controller('ChessCtrl',
-      ['$scope', '$rootScope','$log', '$timeout',
-       'gameService', 'stateService', 'gameLogic', 
-       'aiService', 'resizeGameAreaService', '$translate', 'dragAndDropService',
-      function ($scope, $rootScope, $log, $timeout,
-        gameService, stateService, gameLogic, 
-        aiService, resizeGameAreaService, $translate, dragAndDropService) {
+  // .controller('ChessCtrl',
+  //     ['$scope', '$rootScope','$log', '$timeout',
+  //      'gameService', 'stateService', 'gameLogic',
+  //      'aiService', 'resizeGameAreaService', '$translate', 'dragAndDropService',
+  //     function ($scope, $rootScope, $log, $timeout,
+  //       gameService, stateService, gameLogic,
+  //       aiService, resizeGameAreaService, $translate, dragAndDropService) {
+  .run(['gameLogic',
+      'aiService',
+      function (
+        gameLogic,
+        aiService) {
 
     'use strict';
+
+    var $log = log;
+    var $scope = $rootScope;
+    var $translate = translate;
+    translate.setLanguage('en', {
+      CHESS_GAME: "Chess",
+      PROMOTION_MESSAGE: "Congratulations! Which piece would you like to promote to?",
+      PROMOTE_QUEEN: "Queen",
+      PROMOTE_ROOK: "Rook",
+      PROMOTE_BISHOP: "Bishop",
+      PROMOTE_KNIGHT: "Knight",
+      PROMOTE_ACTION: "Promote",
+      RULES_OF_CHESS: "Rules of Chess",
+      CLOSE: "Close",
+      RULES_SLIDE1: "King moves one piece around it",
+      RULES_SLIDE2: "Rook moves horisontaly and verticaly",
+      RULES_SLIDE3: "Bishop moves diagnaly and anti-diagnaly",
+      RULES_SLIDE4: "Queen is the most powerful piece in Chess, it can move horizontaly, verticaly and diagnaly.",
+      RULES_SLIDE5: "Knight can move as 'L' shape and skip other pieces",
+      RULES_SLIDE6: "Pawn moves forward one row(or two rows in initial move), capture pieces diagnaly",
+      RULES_SLIDE7: "En passant: a special pawn capture",
+      RULES_SLIDE8: "Promotion: the pawn reaches last row is qualified to promotion",
+      RULES_SLIDE9: "Castling: King and Rook move together(with conditions) as picture shows",
+      RULES_SLIDE10: "In check: When a king is under immediate attack by one or two of the opponent's pieces.",
+      RULES_SLIDE11: "Endgame - wins by Checkmate",
+      RULES_SLIDE11_2: "Make opponent's king has no available legal moves while is under check by you.",
+      RULES_SLIDE12: "Endgame - draws by Stalemate",
+      RULES_SLIDE12_2: "Make opponent's king has no available legal moves while is NOT under check by you.",
+    });
+
     resizeGameAreaService.setWidthToHeight(1);
 
     console.log("Translation of 'RULES_OF_CHESS' is " + $translate('RULES_OF_CHESS'));
@@ -24,9 +59,9 @@
     var nextZIndex = 61;
     var isPromotionModalShowing = {};
     var modalName = 'promotionModal';
-    
+
     function sendComputerMove() {
-      var possibleMoves = gameLogic.getPossibleMoves($scope.board, $scope.turnIndex, 
+      var possibleMoves = gameLogic.getPossibleMoves($scope.board, $scope.turnIndex,
             $scope.isUnderCheck, $scope.canCastleKing,
             $scope.canCastleQueen, $scope.enpassantPosition);
       if (possibleMoves.length) {
@@ -36,8 +71,8 @@
         $scope.deltaFrom = pm[0];
         $scope.deltaTo = pm[1][index2];
 
-        gameService.makeMove(gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
-            $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
+        gameService.makeMove(gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo,
+            $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing,
             $scope.canCastleQueen, $scope.enpassantPosition));
       } else {
         $log.info("no there are no possible moves!");
@@ -84,9 +119,9 @@
       }
 
       // clear up the selectedCells and waiting for next valid move
-      selectedCells = [];    
+      selectedCells = [];
     }
-    
+
     window.e2e_test_stateService = stateService;
     dragAndDropService.addDragListener("gameArea", handleDragEvent);
     function handleDragEvent(type, clientX, clientY) {
@@ -118,10 +153,10 @@
         if (type === "touchstart" && !draggingStartedRowCol) {
           // drag started
           var curPiece = $scope.board[r_row][r_col];
-          if (curPiece && curPiece.charAt(0) === getTurn($scope.turnIndex)) {            
+          if (curPiece && curPiece.charAt(0) === getTurn($scope.turnIndex)) {
             draggingStartedRowCol = {row: row, col: col};
-            draggingPiece = document.getElementById("e2e_test_img_" + 
-              $scope.getPieceKindInId(row, col) + '_' + 
+            draggingPiece = document.getElementById("e2e_test_img_" +
+              $scope.getPieceKindInId(row, col) + '_' +
               draggingStartedRowCol.row + "x" + draggingStartedRowCol.col);
             if (draggingPiece) {
               draggingPiece.style['z-index'] = ++nextZIndex;
@@ -148,7 +183,7 @@
           var from = draggingStartedRowCol;
           var to = {row: row, col: col};
           dragDone(from, to);
-          
+
         } else {
           // Drag continue
           setDraggingPieceTopLeft(getSquareTopLeft(row, col));
@@ -158,7 +193,7 @@
       if (type === "touchend" || type === "touchcancel" || type === "touchleave") {
         // drag ended
         // return the piece to it's original style (then angular will take care to hide it).
-        setDraggingPieceTopLeft(getSquareTopLeft(draggingStartedRowCol.row, draggingStartedRowCol.col));    
+        setDraggingPieceTopLeft(getSquareTopLeft(draggingStartedRowCol.row, draggingStartedRowCol.col));
         draggingPiece.style['width'] = '60%';
         draggingPiece.style['height'] = '60%';
         draggingPiece.style['top'] = '20%';
@@ -225,7 +260,7 @@
         to.row = 7 - to.row;
         to.col = 7 - to.col;
       }
-        
+
       $scope.deltaFrom = from;
       $scope.deltaTo = to;
       if (shouldPromote($scope.board, from, to, $scope.turnIndex)) {
@@ -233,13 +268,13 @@
         isPromotionModalShowing[modalName] = true;
         return;
       }
-      actuallyMakeMove();      
+      actuallyMakeMove();
     }
 
     function actuallyMakeMove() {
       try {
-        var move = gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo, 
-          $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing, 
+        var move = gameLogic.createMove($scope.board, $scope.deltaFrom, $scope.deltaTo,
+          $scope.turnIndex, $scope.isUnderCheck, $scope.canCastleKing,
           $scope.canCastleQueen, $scope.enpassantPosition, $scope.promoteTo);
         $scope.isYourTurn = false; // to prevent making another move
         gameService.makeMove(move);
@@ -249,7 +284,7 @@
       }
     }
     function getDraggingPieceAvailableMoves(row, col) {
-      var possibleMoves = gameLogic.getPossibleMoves($scope.board, $scope.turnIndex, 
+      var possibleMoves = gameLogic.getPossibleMoves($scope.board, $scope.turnIndex,
                       $scope.isUnderCheck, $scope.canCastleKing,
                       $scope.canCastleQueen, $scope.enpassantPosition);
       var draggingPieceAvailableMoves = [];
@@ -262,7 +297,7 @@
             availablePos.row = 7 - availablePos.row;
             availablePos.col = 7 - availablePos.col;
           }
-          draggingPieceAvailableMoves.push(document.getElementById("MyBackground" + 
+          draggingPieceAvailableMoves.push(document.getElementById("MyBackground" +
             availablePos.row + "x" + availablePos.col));
         }
       }
@@ -272,7 +307,7 @@
 
     function isValidToCell(turnIndex, row, col) {
       var opponent = getOpponent(turnIndex);
-      return $scope.board[row][col] === '' || 
+      return $scope.board[row][col] === '' ||
               $scope.board[row][col].charAt(0) === opponent;
     }
 
@@ -283,7 +318,7 @@
       }
       var turn = getTurn($scope.turnIndex);
 
-      return draggingStartedRowCol && draggingStartedRowCol.row === row && 
+      return draggingStartedRowCol && draggingStartedRowCol.row === row &&
               draggingStartedRowCol.col === col && $scope.board[row][col].charAt(0) === turn;
     };
 
@@ -329,7 +364,7 @@
           col = 7 - col;
         }
         return $scope.board[row][col];
-      }    
+      }
     };
 
     $scope.getBackgroundSrc = function(row, col) {
@@ -365,14 +400,14 @@
           if (!$scope.canCastleKing) { $scope.canCastleKing = [true, true]; }
           if (!$scope.canCastleQueen) { $scope.canCastleQueen = [true, true]; }
           if (!$scope.enpassantPosition) { $scope.enpassantPosition = {row: null, col: null}; }
-          var possibleMoves = gameLogic.getPossibleMoves($scope.board, $scope.turnIndex, 
+          var possibleMoves = gameLogic.getPossibleMoves($scope.board, $scope.turnIndex,
                       $scope.isUnderCheck, $scope.canCastleKing,
                       $scope.canCastleQueen, $scope.enpassantPosition);
           return cellInPossibleMoves(row, col, possibleMoves) !== false;
         } else {
           return false;
         }
-      }     
+      }
     };
 
     function getTurn(turnIndex) {
@@ -384,13 +419,13 @@
     }
 
     function cellInPossibleMoves(row, col, possibleMoves) {
-      var cell = {row: row, col: col};  
+      var cell = {row: row, col: col};
       for (var i = 0; i < possibleMoves.length; i++) {
         if (angular.equals(cell, possibleMoves[i][0])) {
           return i;
         }
-      }  
-      return false;     
+      }
+      return false;
     }
 
     $scope.isBlackPiece = function(row, col) {
@@ -411,7 +446,7 @@
 
     function shouldPromote(board, deltaFrom, deltaTo, turnIndex) {
       var myPawn = (turnIndex === 0 ? 'WP' : 'BP');
-      return myPawn === board[deltaFrom.row][deltaFrom.col] && 
+      return myPawn === board[deltaFrom.row][deltaFrom.col] &&
               (deltaTo.row === 0 || deltaTo.row === 7);
     }
 
@@ -428,7 +463,7 @@
         }
       }
       // alert($scope.promoteTo);
-      dismissModal(modalName);     
+      dismissModal(modalName);
       actuallyMakeMove();
     };
 
