@@ -25,9 +25,9 @@
   <!-- /build -->
 
   <!-- build:js dist/everything.min.js -->
-  <script src="src/gameLogic.js"></script>
-  <script src="src/game.js"></script>
-  <script src="src/aiService.js"></script>
+  <script src="ts_output_readonly_do_NOT_change_manually/src/gameLogic.js"></script>
+  <script src="ts_output_readonly_do_NOT_change_manually/src/game.js"></script>
+  <script src="ts_output_readonly_do_NOT_change_manually/src/aiService.js"></script>
   <!-- /build -->
 
   <script>window.angularTranslationLanguages = ['en', 'zh'];</script>
@@ -220,25 +220,25 @@
 
 <div id="gameArea">
   <section id="board">
-    <div ng-repeat="row in rows"
-        style="position:absolute; top:{{row * 100 / rowsNum}}%; left:0; width:100%; height:{{100 / rowsNum}}%;">
-      <div ng-repeat="col in cols" class="square"
-          style="position:absolute; top:0; left:{{col * 100 / colsNum}}%; width:{{100 / colsNum}}%; height:100%;"
+    <div ng-repeat="row in game.rows"
+        style="position:absolute; top:{{row * 100 / game.rowsNum}}%; left:0; width:100%; height:{{100 / game.rowsNum}}%;">
+      <div ng-repeat="col in game.cols" class="square"
+          style="position:absolute; top:0; left:{{col * 100 / game.colsNum}}%; width:{{100 / game.colsNum}}%; height:100%;"
           id="{{'e2e_test_div_' + row + 'x' + col}}">
         <svg width="100%" height="100%"
           style="position:absolute;"
           ng-show="true">
           <!-- background image -->
-          <rect width="100%" height="100%" ng-attr-fill="{{getBackgroundFill(row, col)}}" id="MyBackground{{row}}x{{col}}" />
+          <rect width="100%" height="100%" ng-attr-fill="{{game.getBackgroundFill(row, col)}}" id="MyBackground{{row}}x{{col}}" />
           <div class="img-wrap" id="MyPiece{{row}}x{{col}}">
             <!--The image of the piece get wrapped upon background img-->
             <img ng-class="{piece: true,
-                            canSelect: canSelect(row, col),
-                            isBlackPiece: isBlackPiece(row, col),
-                            isWhitePiece: isWhitePiece(row, col)}"
-              ng-show="shouldShowImage(row, col)"
-              ng-src="{{getImageSrc(row, col)}}"
-              id="{{'e2e_test_img_' + getPieceKindInId(row, col) + '_' + row + 'x' + col}}">
+                            canSelect: game.canSelect(row, col),
+                            isBlackPiece: game.isBlackPiece(row, col),
+                            isWhitePiece: game.isWhitePiece(row, col)}"
+              ng-show="game.shouldShowImage(row, col)"
+              ng-src="{{game.getImageSrc(row, col)}}"
+              id="{{'e2e_test_img_' + game.getPieceKindInId(row, col) + '_' + row + 'x' + col}}">
           </div>
         </svg>
       </div>
